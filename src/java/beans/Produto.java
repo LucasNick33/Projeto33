@@ -1,19 +1,21 @@
-package venda;
+package beans;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class ItemVenda implements Serializable {
+public class Produto implements Serializable {
     
     @Id
     private Long id;
-    private Long idProduto;
-    private Long idVenda;
+    private String nome;
+    private String marca;
+    private String descricao;
     private Double precoCompra;
     private Double precoVenda;
     private Double quantidade;
+    private String categoria;
     private Double porcentagemDesconto;
     private Boolean sugestao;
 
@@ -25,20 +27,28 @@ public class ItemVenda implements Serializable {
         this.id = id;
     }
 
-    public Long getIdProduto() {
-        return idProduto;
+    public String getNome() {
+        return nome;
     }
 
-    public void setIdProduto(Long idProduto) {
-        this.idProduto = idProduto;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public Long getIdVenda() {
-        return idVenda;
+    public String getMarca() {
+        return marca;
     }
 
-    public void setIdVenda(Long idVenda) {
-        this.idVenda = idVenda;
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public Double getPrecoCompra() {
@@ -63,6 +73,14 @@ public class ItemVenda implements Serializable {
 
     public void setQuantidade(Double quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
     public Double getPorcentagemDesconto() {
