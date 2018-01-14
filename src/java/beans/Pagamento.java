@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -12,7 +13,7 @@ public class Pagamento implements Serializable {
     private Long idVenda;
     private Double valor;
     private String tipo;
-    private Long dataVencimento;
+    private Timestamp dataVencimento;
     private Boolean pago;
 
     public Long getId() {
@@ -47,11 +48,11 @@ public class Pagamento implements Serializable {
         this.tipo = tipo;
     }
 
-    public Long getDataVencimento() {
+    public Timestamp getDataVencimento() {
         return dataVencimento;
     }
 
-    public void setDataVencimento(Long dataVencimento) {
+    public void setDataVencimento(Timestamp dataVencimento) {
         this.dataVencimento = dataVencimento;
     }
 
