@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -16,6 +17,8 @@ public class ItemVenda implements Serializable {
     private Double quantidade;
     private Double porcentagemDesconto;
     private Boolean sugestao;
+    private Timestamp dataGarantia;
+    private Double porcentagemGarantia;
 
     public Long getId() {
         return id;
@@ -79,6 +82,22 @@ public class ItemVenda implements Serializable {
 
     public void setSugestao(Boolean sugestao) {
         this.sugestao = sugestao;
+    }
+
+    public Timestamp getDataGarantia() {
+        return dataGarantia;
+    }
+
+    public void setDataGarantia(Timestamp dataGarantia) {
+        this.dataGarantia = dataGarantia;
+    }
+
+    public Double getPorcentagemGarantia() {
+        return porcentagemGarantia;
+    }
+
+    public void setPorcentagemGarantia(Double porcentagemGarantia) {
+        this.porcentagemGarantia = porcentagemGarantia;
     }
     
 }
