@@ -17,6 +17,7 @@ public class Produto implements Serializable {
     private Double quantidade;
     private String categoria;
     private Double porcentagemDesconto;
+    private Boolean sugestao;
 
     public Long getId() {
         return id;
@@ -88,6 +89,14 @@ public class Produto implements Serializable {
 
     public void setPorcentagemDesconto(Double porcentagemDesconto) {
         this.porcentagemDesconto = porcentagemDesconto;
+    }
+
+    public Boolean getSugestao() {
+        return sugestao;
+    }
+
+    public void setSugestao(Boolean sugestao) {
+        this.sugestao = sugestao;
     }
     
 }
