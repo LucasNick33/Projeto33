@@ -17,7 +17,6 @@ public class Produto implements Serializable {
     private String descricao;
     private BigDecimal precoCompra;
     private BigDecimal precoVenda;
-    private BigDecimal quantidade;
     private String categoria;
     private BigDecimal porcentagemDesconto;
     private Boolean sugestao;
@@ -76,15 +75,7 @@ public class Produto implements Serializable {
     public void setPrecoVenda(BigDecimal precoVenda) {
         this.precoVenda = precoVenda;
     }
-
-    public BigDecimal getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(BigDecimal quantidade) {
-        this.quantidade = quantidade;
-    }
-
+    
     public String getCategoria() {
         return categoria;
     }
