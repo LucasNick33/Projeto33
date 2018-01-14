@@ -4,14 +4,17 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Pagamento implements Serializable {
     
     @Id
     private Long id;
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Venda.class)
     private Long idVenda;
     private BigDecimal valor;
     private String tipo;

@@ -3,15 +3,19 @@ package beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Venda implements Serializable {
     
     @Id
     private Long id;
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Usuario.class)
     private Long idUsuario;
+    @ManyToOne(cascade = CascadeType.ALL, targetEntity = Cliente.class)
     private Long idCliente;
     private BigDecimal porcentagemDesconto;
 
