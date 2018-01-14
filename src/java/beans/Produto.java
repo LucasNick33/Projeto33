@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,14 +14,14 @@ public class Produto implements Serializable {
     private String nome;
     private String marca;
     private String descricao;
-    private Double precoCompra;
-    private Double precoVenda;
-    private Double quantidade;
+    private BigDecimal precoCompra;
+    private BigDecimal precoVenda;
+    private BigDecimal quantidade;
     private String categoria;
-    private Double porcentagemDesconto;
+    private BigDecimal porcentagemDesconto;
     private Boolean sugestao;
     private Timestamp dataGarantia;
-    private Double porcentagemGarantia;
+    private BigDecimal porcentagemGarantia;
     private Boolean ativo;
 
     public Long getId() {
@@ -55,27 +56,27 @@ public class Produto implements Serializable {
         this.descricao = descricao;
     }
 
-    public Double getPrecoCompra() {
+    public BigDecimal getPrecoCompra() {
         return precoCompra;
     }
 
-    public void setPrecoCompra(Double precoCompra) {
+    public void setPrecoCompra(BigDecimal precoCompra) {
         this.precoCompra = precoCompra;
     }
 
-    public Double getPrecoVenda() {
+    public BigDecimal getPrecoVenda() {
         return precoVenda;
     }
 
-    public void setPrecoVenda(Double precoVenda) {
+    public void setPrecoVenda(BigDecimal precoVenda) {
         this.precoVenda = precoVenda;
     }
 
-    public Double getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Double quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 
@@ -87,11 +88,11 @@ public class Produto implements Serializable {
         this.categoria = categoria;
     }
 
-    public Double getPorcentagemDesconto() {
+    public BigDecimal getPorcentagemDesconto() {
         return porcentagemDesconto;
     }
 
-    public void setPorcentagemDesconto(Double porcentagemDesconto) {
+    public void setPorcentagemDesconto(BigDecimal porcentagemDesconto) {
         this.porcentagemDesconto = porcentagemDesconto;
     }
 
@@ -111,11 +112,11 @@ public class Produto implements Serializable {
         this.dataGarantia = dataGarantia;
     }
 
-    public Double getPorcentagemGarantia() {
+    public BigDecimal getPorcentagemGarantia() {
         return porcentagemGarantia;
     }
 
-    public void setPorcentagemGarantia(Double porcentagemGarantia) {
+    public void setPorcentagemGarantia(BigDecimal porcentagemGarantia) {
         this.porcentagemGarantia = porcentagemGarantia;
     }
 

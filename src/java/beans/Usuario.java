@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,6 +20,7 @@ public class Usuario implements Serializable {
     private Timestamp dataNascimento;
     private String permissoes;
     private Boolean ativo;
+    private BigDecimal porcentagemDesconto;
 
     public Long getId() {
         return id;
@@ -98,6 +100,14 @@ public class Usuario implements Serializable {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public BigDecimal getPorcentagemDesconto() {
+        return porcentagemDesconto;
+    }
+
+    public void setPorcentagemDesconto(BigDecimal porcentagemDesconto) {
+        this.porcentagemDesconto = porcentagemDesconto;
     }
 
 }

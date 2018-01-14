@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,7 +12,7 @@ public class Venda implements Serializable {
     private Long id;
     private Long idUsuario;
     private Long idCliente;
-    private Double porcentagemDesconto;
+    private BigDecimal porcentagemDesconto;
 
     public Long getId() {
         return id;
@@ -37,11 +38,11 @@ public class Venda implements Serializable {
         this.idCliente = idCliente;
     }
 
-    public Double getPorcentagemDesconto() {
+    public BigDecimal getPorcentagemDesconto() {
         return porcentagemDesconto;
     }
 
-    public void setPorcentagemDesconto(Double porcentagemDesconto) {
+    public void setPorcentagemDesconto(BigDecimal porcentagemDesconto) {
         this.porcentagemDesconto = porcentagemDesconto;
     }
     

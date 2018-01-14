@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +12,7 @@ public class Pagamento implements Serializable {
     @Id
     private Long id;
     private Long idVenda;
-    private Double valor;
+    private BigDecimal valor;
     private String tipo;
     private Timestamp dataVencimento;
     private Boolean pago;
@@ -32,11 +33,11 @@ public class Pagamento implements Serializable {
         this.idVenda = idVenda;
     }
 
-    public Double getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(Double valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 
