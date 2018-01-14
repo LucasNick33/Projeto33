@@ -21,6 +21,7 @@ public class Produto implements Serializable {
     private Boolean sugestao;
     private Timestamp dataGarantia;
     private Double porcentagemGarantia;
+    private Boolean ativo;
 
     public Long getId() {
         return id;
@@ -116,6 +117,14 @@ public class Produto implements Serializable {
 
     public void setPorcentagemGarantia(Double porcentagemGarantia) {
         this.porcentagemGarantia = porcentagemGarantia;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
     
 }

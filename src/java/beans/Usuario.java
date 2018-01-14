@@ -18,6 +18,7 @@ public class Usuario implements Serializable {
     private String endereco;
     private Timestamp dataNascimento;
     private String permissoes;
+    private Boolean ativo;
 
     public Long getId() {
         return id;
@@ -89,6 +90,14 @@ public class Usuario implements Serializable {
 
     public void setPermissoes(String permissoes) {
         this.permissoes = permissoes;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 
 }

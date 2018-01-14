@@ -16,6 +16,7 @@ public class Cliente implements Serializable {
     private String telefone;
     private String endereco;
     private Timestamp dataNascimento;
+    private Boolean ativo;
 
     public Long getId() {
         return id;
@@ -71,6 +72,14 @@ public class Cliente implements Serializable {
 
     public void setDataNascimento(Timestamp dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
     
 }
