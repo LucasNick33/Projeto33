@@ -1,4 +1,4 @@
-package usuario;
+package cliente;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -6,18 +6,16 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Usuario implements Serializable {
+public class Cliente implements Serializable {
     
     @Id
     private Long id;
     private String nome;
     private String CPF;
-    private String senha;
     private String email;
     private String telefone;
     private String endereco;
     private Timestamp dataNascimento;
-    private String permissoes;
 
     public Long getId() {
         return id;
@@ -41,14 +39,6 @@ public class Usuario implements Serializable {
 
     public void setCPF(String CPF) {
         this.CPF = CPF;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 
     public String getEmail() {
@@ -82,13 +72,5 @@ public class Usuario implements Serializable {
     public void setDataNascimento(Timestamp dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
-
-    public String getPermissoes() {
-        return permissoes;
-    }
-
-    public void setPermissoes(String permissoes) {
-        this.permissoes = permissoes;
-    }
-
+    
 }
