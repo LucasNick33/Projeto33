@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class Usuario implements Serializable {
@@ -22,6 +23,8 @@ public class Usuario implements Serializable {
     private String permissoes;
     private Boolean ativo;
     private BigDecimal porcentagemDesconto;
+    @Transient
+    private String estoque;
 
     public Usuario(){
         id = Calendar.getInstance().getTimeInMillis();
@@ -113,6 +116,14 @@ public class Usuario implements Serializable {
 
     public void setPorcentagemDesconto(BigDecimal porcentagemDesconto) {
         this.porcentagemDesconto = porcentagemDesconto;
+    }
+
+    public String getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(String estoque) {
+        this.estoque = estoque;
     }
 
 }
