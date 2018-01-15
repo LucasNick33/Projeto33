@@ -18,6 +18,7 @@ public class Venda implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Cliente.class)
     private Long idCliente;
     private BigDecimal porcentagemDesconto;
+    private String estoque;
 
     public Venda(){
         id = Calendar.getInstance().getTimeInMillis();
@@ -53,6 +54,14 @@ public class Venda implements Serializable {
 
     public void setPorcentagemDesconto(BigDecimal porcentagemDesconto) {
         this.porcentagemDesconto = porcentagemDesconto;
+    }
+
+    public String getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(String estoque) {
+        this.estoque = estoque;
     }
     
 }
