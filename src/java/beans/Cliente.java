@@ -2,7 +2,6 @@ package beans;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,10 +19,6 @@ public class Cliente implements Serializable {
     private String endereco;
     private Timestamp dataNascimento;
     private Boolean ativo;
-
-    public Cliente(){
-        id = Calendar.getInstance().getTimeInMillis();
-    }
     
     public Long getId() {
         return id;

@@ -4,6 +4,7 @@ package dao;
 import beans.Cliente;
 import beans.Usuario;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,7 @@ public class ClienteDao {
     }
     
     public Boolean inserir() {
+        cliente.setId(Calendar.getInstance().getTimeInMillis());
         Session s = BaseDao.getConexao();
         Transaction t = null;
         try {
@@ -77,25 +79,14 @@ public class ClienteDao {
         }
         return false;
     }
-
-    public List<Cliente> listar() {
-        Session s = BaseDao.getConexao();
-        List<Cliente> clientes = new ArrayList<>();
-        try {
-            clientes = s.createQuery("FROM Cliente").list();
-        } catch (Exception ex) {
-            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return clientes;
-    }
-
-    public List<Usuario> listarPorNome() {
+    
+    public List<Usuario> listar() {
         cliente.setNome(cliente.getNome() == null ? "" : cliente.getNome());
         String nome = "%" + cliente.getNome().trim() + "%";
         Session s = BaseDao.getConexao();
         List<Usuario> clientes = new ArrayList<>();
         try {
-            Query query = s.createQuery("FROM Cliente c WHERE c.nome like ?");
+            Query query = s.createQuery("FROM Cliente c WHERE c.nome like ? ORDER BY c.nome");
             query.setParameter(0, nome);
             clientes = query.list();
         } catch (Exception ex) {

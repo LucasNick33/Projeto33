@@ -23,7 +23,7 @@ public class EstoqueDao {
         Session s = BaseDao.getConexao();
         List<String> estoques = new ArrayList<>();
         try{
-            estoques = s.createQuery("SELECT nome FROM Estoque").list();
+            estoques = s.createQuery("SELECT nome FROM Estoque GROUP BY nome").list();
         } catch (Exception ex){
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }

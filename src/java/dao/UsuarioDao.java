@@ -2,6 +2,7 @@ package dao;
 
 import beans.Usuario;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +33,7 @@ public class UsuarioDao {
     }
 
     public Boolean inserir() {
+        usuario.setId(Calendar.getInstance().getTimeInMillis());
         Session s = BaseDao.getConexao();
         Transaction t = null;
         try {
@@ -78,23 +80,12 @@ public class UsuarioDao {
     }
 
     public List<Usuario> listar() {
-        Session s = BaseDao.getConexao();
-        List<Usuario> usuarios = new ArrayList<>();
-        try {
-            usuarios = (List<Usuario>) s.createQuery("FROM Usuario").list();
-        } catch (Exception ex) {
-            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return usuarios;
-    }
-
-    public List<Usuario> listarPorNome() {
         usuario.setNome(usuario.getNome() == null ? "" : usuario.getNome());
         String nome = "%" + usuario.getNome().trim() + "%";
         Session s = BaseDao.getConexao();
         List<Usuario> usuarios = new ArrayList<>();
         try {
-            Query query = s.createQuery("FROM Usuario u WHERE u.nome like ?");
+            Query query = s.createQuery("FROM Usuario u WHERE u.nome like ? ORDER BY u.nome");
             query.setParameter(0, nome);
             usuarios = query.list();
         } catch (Exception ex) {

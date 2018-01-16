@@ -3,7 +3,6 @@ package beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -27,10 +26,6 @@ public class Usuario implements Serializable {
     private BigDecimal porcentagemDesconto;
     @Transient
     private String estoque;
-
-    public Usuario(){
-        id = Calendar.getInstance().getTimeInMillis();
-    }
     
     public Long getId() {
         return id;

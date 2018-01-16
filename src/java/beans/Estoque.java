@@ -2,7 +2,6 @@ package beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,10 +16,6 @@ public class Estoque implements Serializable {
     private Long idProduto;
     private BigDecimal quantidade;
     private String nome;
-
-    public Estoque() {
-        this.id = Calendar.getInstance().getTimeInMillis();
-    }
 
     public Long getId() {
         return id;
