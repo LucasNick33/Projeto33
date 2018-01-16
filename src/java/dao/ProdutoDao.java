@@ -99,4 +99,28 @@ public class ProdutoDao {
         return produtos;
     }
     
+    public List<String> listarCategorias(){
+        Session s = BaseDao.getConexao();
+        List<String> categorias = new ArrayList<>();
+        try{
+        Query query = s.createQuery("SELECT p.categoria FROM Produto p GROUP BY p.categoria ORDER BY p.categoria DESC");
+        categorias = query.list();
+        } catch (Exception ex){
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return categorias;
+    }
+    
+    public List<String> listarMarcas(){
+        Session s = BaseDao.getConexao();
+        List<String> marcas = new ArrayList<>();
+        try{
+        Query query = s.createQuery("SELECT p.marca FROM Produto p GROUP BY p.marca ORDER BY p.marca DESC");
+        marcas = query.list();
+        } catch (Exception ex){
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return marcas;
+    }
+    
 }
