@@ -6,7 +6,8 @@ public enum Permissao {
     CADASTRO_PRODUTO(2, "Cadastro de produto"),
     CADASTRO_CLIENTE(3, "Cadastro de cliente"),
     CADASTRO_ESTOQUE(4, "Cadastro de estoque"),
-    DESCONTO_ITEM_VENDA(5, "Desconto no item de venda");
+    DESCONTO_ITEM_VENDA(5, "Desconto no item de venda"),
+    CONFIGURACOES(6, "Configurações");
     
     private final Integer id;
     private final String descricao;

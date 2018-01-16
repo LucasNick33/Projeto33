@@ -2,3 +2,4 @@ build.xml
 nbproject
 build
 dist
+src/java/hibernate.cfg.xml

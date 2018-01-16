@@ -1,22 +1,29 @@
 package dao;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 public class BaseDao {
     
-    private static Session conexao;
-
-    static{
-        conexao = new Configuration().configure().buildSessionFactory().openSession();
+    private static final SessionFactory sessionFactory;
+    static {
+            try {
+            	Configuration cfg = new Configuration().configure("hibernate.cfg.xml");        	
+            	StandardServiceRegistryBuilder sb = new StandardServiceRegistryBuilder();
+            	sb.applySettings(cfg.getProperties());
+            	StandardServiceRegistry standardServiceRegistry = sb.build();           	
+            	sessionFactory = cfg.buildSessionFactory(standardServiceRegistry);
+            } catch (Throwable th) {
+                    System.err.println("Enitial SessionFactory creation failed" + th);
+                    throw new ExceptionInInitializerError(th);
+            }
     }
     
-    public static Session getConexao() {
-        return conexao;
+    public static SessionFactory getConexao() {
+            return sessionFactory;
     }
 
-    public static void setConexao(Session conexao) {
-        BaseDao.conexao = conexao;
-    }
-    
 }
