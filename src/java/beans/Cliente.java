@@ -3,6 +3,7 @@ package beans;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,6 +12,7 @@ public class Cliente implements Serializable {
     
     @Id
     private Long id;
+    @Column(unique = true)
     private String nome;
     private String CPF;
     private String email;

@@ -3,10 +3,12 @@ package beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 @Entity
 public class Venda implements Serializable {
@@ -20,6 +22,10 @@ public class Venda implements Serializable {
     private BigDecimal total;
     private BigDecimal porcentagemDesconto;
     private String estoque;
+    @Transient
+    private List<ItemVenda> itens;
+    @Transient
+    private List<Pagamento> pagamentos;
 
     public Venda(){
         id = Calendar.getInstance().getTimeInMillis();
@@ -71,6 +77,22 @@ public class Venda implements Serializable {
 
     public void setEstoque(String estoque) {
         this.estoque = estoque;
+    }
+
+    public List<ItemVenda> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemVenda> itens) {
+        this.itens = itens;
+    }
+
+    public List<Pagamento> getPagamentos() {
+        return pagamentos;
+    }
+
+    public void setPagamentos(List<Pagamento> pagamentos) {
+        this.pagamentos = pagamentos;
     }
     
 }

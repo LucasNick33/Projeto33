@@ -1,5 +1,7 @@
+
 package dao;
 
+import beans.Cliente;
 import beans.Usuario;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,19 +10,18 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import util.VariaveisGlobais;
 
-public class UsuarioDao {
-
-    private Usuario usuario;
+public class ClienteDao {
+    
+    private Cliente cliente;
     private String mensagem;
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Cliente getCliente() {
+        return cliente;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public String getMensagem() {
@@ -30,15 +31,15 @@ public class UsuarioDao {
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
     }
-
+    
     public Boolean inserir() {
         Session s = BaseDao.getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
-            s.save(usuario);
+            s.save(cliente);
             t.commit();
-            mensagem = "Usuário cadastrado com sucesso!";
+            mensagem = "Cliente cadastrado com sucesso!";
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -46,9 +47,9 @@ public class UsuarioDao {
                 t.rollback();
             }
             if(ex.toString().contains("ConstraintViolationException")){
-                mensagem = "Há outro usuário cadastrado com esse nome!";
+                mensagem = "Há outro cliente cadastrado com esse nome!";
             } else {
-                mensagem = "Erro ao cadastrar usuário!";
+                mensagem = "Erro ao cadastrar cliente!";
             }
         }
         return false;
@@ -59,9 +60,9 @@ public class UsuarioDao {
         Transaction t = null;
         try {
             t = s.beginTransaction();
-            s.update(usuario);
+            s.update(cliente);
             t.commit();
-            mensagem = "Usuário atualizado com sucesso!";
+            mensagem = "Cliente atualizado com sucesso!";
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -69,59 +70,38 @@ public class UsuarioDao {
                 t.rollback();
             }
             if(ex.toString().contains("ConstraintViolationException")){
-                mensagem = "Há outro usuário cadastrado com esse nome!";
+                mensagem = "Há outro cliente cadastrado com esse nome!";
             } else {
-                mensagem = "Erro ao atualizar usuário!";
+                mensagem = "Erro ao atualizar cliente!";
             }
         }
         return false;
     }
 
-    public List<Usuario> listar() {
+    public List<Cliente> listar() {
         Session s = BaseDao.getConexao();
-        List<Usuario> usuarios = new ArrayList<>();
+        List<Cliente> clientes = new ArrayList<>();
         try {
-            usuarios = (List<Usuario>) s.createQuery("FROM Usuario").list();
+            clientes = s.createQuery("FROM Cliente").list();
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return usuarios;
+        return clientes;
     }
 
     public List<Usuario> listarPorNome() {
-        usuario.setNome(usuario.getNome() == null ? "" : usuario.getNome());
-        String nome = "%" + usuario.getNome().trim() + "%";
+        cliente.setNome(cliente.getNome() == null ? "" : cliente.getNome());
+        String nome = "%" + cliente.getNome().trim() + "%";
         Session s = BaseDao.getConexao();
-        List<Usuario> usuarios = new ArrayList<>();
+        List<Usuario> clientes = new ArrayList<>();
         try {
-            Query query = s.createQuery("FROM Usuario u WHERE u.nome like ?");
+            Query query = s.createQuery("FROM Cliente c WHERE c.nome like ?");
             query.setParameter(0, nome);
-            usuarios = query.list();
+            clientes = query.list();
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return usuarios;
-    }
-
-    public Boolean login(){
-        Session s = BaseDao.getConexao();
-        boolean login = false;
-        List<Usuario> usuarios = null;
-        try {
-            Query query = s.createQuery("FROM Usuario u WHERE u.nome = ? and u.senha = ?");
-            query.setParameter(0, usuario.getNome());
-            query.setParameter(1, usuario.getSenha());
-            usuarios = query.list();
-            if(!usuarios.isEmpty()){
-                login = true;
-                VariaveisGlobais.usuario = usuario;
-            } else {
-                mensagem = "Nome ou senha incorreto(s)!";
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return login;
+        return clientes;
     }
     
 }

@@ -6,8 +6,15 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import util.NumUtils;
 
 @Entity
+@Table(
+    uniqueConstraints=
+        @UniqueConstraint(columnNames={"nome", "marca"})
+)
 public class Produto implements Serializable {
     
     @Id
@@ -122,6 +129,11 @@ public class Produto implements Serializable {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+    
+    @Override
+    public String toString(){
+        return getCategoria() + ": " + getMarca() + " " + getNome() + " = " + NumUtils.formataValor(getPrecoVenda());
     }
     
 }

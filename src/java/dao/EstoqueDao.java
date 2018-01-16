@@ -20,14 +20,12 @@ public class EstoqueDao {
     }
     
     public List<String> listarNomes(){
-        Session s = BaseDao.getConexao().openSession();
+        Session s = BaseDao.getConexao();
         List<String> estoques = new ArrayList<>();
         try{
             estoques = s.createQuery("SELECT nome FROM Estoque").list();
         } catch (Exception ex){
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            s.close();
         }
         return estoques;
     }
