@@ -17,6 +17,7 @@ public class Venda implements Serializable {
     private Long idUsuario;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Cliente.class)
     private Long idCliente;
+    private BigDecimal total;
     private BigDecimal porcentagemDesconto;
     private String estoque;
 
@@ -46,6 +47,14 @@ public class Venda implements Serializable {
 
     public void setIdCliente(Long idCliente) {
         this.idCliente = idCliente;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public BigDecimal getPorcentagemDesconto() {
