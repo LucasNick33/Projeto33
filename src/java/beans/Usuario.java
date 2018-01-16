@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -13,6 +14,7 @@ public class Usuario implements Serializable {
     
     @Id
     private Long id;
+    @Column(unique = true)
     private String nome;
     private String CPF;
     private String senha;

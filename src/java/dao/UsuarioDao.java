@@ -1,6 +1,7 @@
 package dao;
 
 import beans.Usuario;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +44,11 @@ public class UsuarioDao {
             if (t != null) {
                 t.rollback();
             }
-            mensagem = "Erro ao cadastrar usuário!";
+            if(ex.toString().contains("ConstraintViolationException")){
+                mensagem = "Há outro usuário cadastrado com esse nome!";
+            } else {
+                mensagem = "Erro ao cadastrar usuário!";
+            }
             return false;
         } finally {
             s.close();
@@ -73,7 +78,7 @@ public class UsuarioDao {
 
     public List<Usuario> listar() {
         Session s = BaseDao.getConexao().openSession();
-        List<Usuario> usuarios = null;
+        List<Usuario> usuarios = new ArrayList<>();
         try {
             usuarios = (List<Usuario>) s.createQuery("FROM Usuario").list();
         } catch (Exception ex) {
@@ -84,10 +89,11 @@ public class UsuarioDao {
         return usuarios;
     }
 
-    public List<Usuario> listar(String nome) {
-        nome = "%" + nome.trim() + "%";
+    public List<Usuario> listarPorNome() {
+        usuario.setNome(usuario.getNome() == null ? "" : usuario.getNome());
+        String nome = "%" + usuario.getNome().trim() + "%";
         Session s = BaseDao.getConexao().openSession();
-        List<Usuario> usuarios = null;
+        List<Usuario> usuarios = new ArrayList<>();
         try {
             Query query = s.createQuery("FROM Usuario u WHERE u.nome like ?");
             query.setParameter(0, nome);
@@ -100,4 +106,26 @@ public class UsuarioDao {
         return usuarios;
     }
 
+    public Boolean login(){
+        Session s = BaseDao.getConexao().openSession();
+        boolean login = false;
+        List<Usuario> usuarios = null;
+        try {
+            Query query = s.createQuery("FROM Usuario u WHERE u.nome = ? and u.senha = ?");
+            query.setParameter(0, usuario.getNome());
+            query.setParameter(1, usuario.getSenha());
+            usuarios = query.list();
+            if(!usuarios.isEmpty()){
+                login = true;
+            } else {
+                mensagem = "Nome ou senha incorreto(s)!";
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            s.close();
+        }
+        return login;
+    }
+    
 }
