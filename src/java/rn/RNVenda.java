@@ -2,12 +2,12 @@ package rn;
 
 import beans.Estoque;
 import beans.ItemVenda;
+import beans.Pagamento;
 import beans.Produto;
 import beans.Venda;
 import dao.EstoqueDao;
 import dao.VariaveisGlobais;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -20,6 +20,7 @@ public class RNVenda {
     private final Boolean checarEstoque;
     private ItemVenda item;
     private ItemVenda itemEditavel;
+    private Pagamento pagamento;
 
     public RNVenda() {
         venda = new Venda();
@@ -60,6 +61,14 @@ public class RNVenda {
         this.itemEditavel = itemEditavel;
     }
 
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
+
     public String getMensagem() {
         return mensagem;
     }
@@ -96,7 +105,8 @@ public class RNVenda {
         if (checarEstoque && !produto.getSugestao()) {
             if (estoqueDao.retirarDoEstoque(item)) {
                 venda.getItens().add(item);
-                
+            } else {
+                mensagem = "erro ao adicionar item de venda!";
             }
         } else {
             venda.getItens().add(item);
@@ -114,6 +124,7 @@ public class RNVenda {
             List<Estoque> estoque = estoqueDao.listar(itemEditavel.getProduto());
             if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(diferencaQuantidade) < 0) {
                 itemEditavel.setQuantidade(item.getQuantidade());
+                mensagem = "Produto sem estoque!";
             } else {
                 BigDecimal quantidade = itemEditavel.getQuantidade();
                 itemEditavel.setQuantidade(diferencaQuantidade.negate());
@@ -121,6 +132,7 @@ public class RNVenda {
                     itemEditavel.setQuantidade(quantidade);
                 } else {
                     itemEditavel.setQuantidade(item.getQuantidade());
+                    mensagem = "Erro ao editar item de venda!";
                 }
             }
         }
@@ -149,6 +161,18 @@ public class RNVenda {
             totalItens = totalItens.add(iv.getTotalItem());
         }
         venda.setValor(totalItens);
+    }
+    
+    public void adicionarPagamento(Pagamento pagamento){
+        if(venda.getValorNaoPago().compareTo(pagamento.getValor()) < 0){
+            mensagem = "Valor desse pagamento é maior que o valor não pago!";
+            return;
+        }
+        venda.getPagamentos().add(pagamento);
+    }
+    
+    public void retirarPagamento(Pagamento pagamento){
+        venda.getPagamentos().remove(pagamento);
     }
     
 }

@@ -12,7 +12,7 @@ import javax.persistence.Transient;
 
 @Entity
 public class Venda implements Serializable {
-    
+
     @Id
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Usuario.class)
@@ -27,7 +27,7 @@ public class Venda implements Serializable {
     private List<ItemVenda> itens;
     @Transient
     private List<Pagamento> pagamentos;
-    
+
     public Long getId() {
         return id;
     }
@@ -59,7 +59,7 @@ public class Venda implements Serializable {
     public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
-    
+
     public BigDecimal getPorcentagemDesconto() {
         return porcentagemDesconto;
     }
@@ -99,21 +99,33 @@ public class Venda implements Serializable {
     public void setPagamentos(List<Pagamento> pagamentos) {
         this.pagamentos = pagamentos;
     }
-    
-    public BigDecimal getDesconto(){
+
+    public BigDecimal getDesconto() {
         return valor.subtract(getTotal());
     }
-    
-    public void setDesconto(BigDecimal valor){
+
+    public void setDesconto(BigDecimal valor) {
         porcentagemDesconto = valor.divide(this.valor, MathContext.DECIMAL128).multiply(new BigDecimal(100));
     }
-    
+
+    public BigDecimal getValorPago() {
+        BigDecimal pagamentoParcial = BigDecimal.ZERO;
+        for (Pagamento pgmt : getPagamentos()) {
+            pagamentoParcial = pagamentoParcial.add(pgmt.getValor());
+        }
+        return pagamentoParcial;
+    }
+
+    public BigDecimal getValorNaoPago() {
+        return getTotal().subtract(getValorPago());
+    }
+
     /**
      *
      * @return valor da venda - desconto
      */
-    public BigDecimal getTotal(){
+    public BigDecimal getTotal() {
         return valor.multiply(porcentagemDesconto.divide(new BigDecimal(100), MathContext.DECIMAL128));
     }
-    
+
 }
