@@ -6,7 +6,10 @@ import beans.Pagamento;
 import beans.Produto;
 import beans.Venda;
 import dao.EstoqueDao;
+import dao.ItemVendaDao;
+import dao.PagamentoDao;
 import dao.VariaveisGlobais;
+import dao.VendaDao;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,12 +20,16 @@ import util.StringUtils;
 public class RNVenda {
 
     private Venda venda;
+    private VendaDao vendaDao;
     private String mensagem;
     private final EstoqueDao estoqueDao;
     private final Boolean checarEstoque;
     private ItemVenda item;
     private ItemVenda itemEditavel;
     private Pagamento pagamento;
+    private PagamentoDao pagamentoDao;
+    private ItemVendaDao itemDao;
+    private Boolean editandoVenda;
 
     public RNVenda() {
         venda = new Venda();
@@ -31,6 +38,12 @@ public class RNVenda {
         venda.setPagamentos(new ArrayList<>());
         venda.setValor(BigDecimal.ZERO);
         venda.setDataVenda(new Timestamp(venda.getId()));
+
+        vendaDao = new VendaDao();
+
+        pagamentoDao = new PagamentoDao();
+
+        itemDao = new ItemVendaDao();
 
         estoqueDao = new EstoqueDao();
         estoqueDao.setEstoque(new Estoque());
@@ -72,6 +85,14 @@ public class RNVenda {
         this.pagamento = pagamento;
     }
 
+    public Boolean getEditandoVenda() {
+        return editandoVenda;
+    }
+
+    public void setEditandoVenda(Boolean editandoVenda) {
+        this.editandoVenda = editandoVenda;
+    }
+
     public String getMensagem() {
         return mensagem;
     }
@@ -82,7 +103,7 @@ public class RNVenda {
 
     public void adicionarItem(Produto produto, BigDecimal quantidade) {
         for (ItemVenda iv : venda.getItens()) {
-            if(iv.getProduto().equals(produto)){
+            if (iv.getProduto().equals(produto)) {
                 item = iv;
                 itemEditavel = iv.copiar();
                 itemEditavel.setQuantidade(itemEditavel.getQuantidade().add(quantidade));
@@ -90,7 +111,7 @@ public class RNVenda {
                 return;
             }
         }
-        
+
         if (checarEstoque && !produto.getSugestao()) {
             List<Estoque> estoque = estoqueDao.listar(produto);
             if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(quantidade) < 0) {
@@ -114,6 +135,7 @@ public class RNVenda {
         } else {
             venda.getItens().add(item);
         }
+        calcularValorVenda();
     }
 
     public void alterarItem() {
@@ -131,7 +153,7 @@ public class RNVenda {
             } else {
                 BigDecimal quantidade = itemEditavel.getQuantidade();
                 itemEditavel.setQuantidade(diferencaQuantidade.negate());
-                if(estoqueDao.adicionarAoEstoque(itemEditavel)){
+                if (estoqueDao.adicionarAoEstoque(itemEditavel)) {
                     itemEditavel.setQuantidade(quantidade);
                 } else {
                     itemEditavel.setQuantidade(item.getQuantidade());
@@ -146,6 +168,7 @@ public class RNVenda {
 
         ItemVenda iv = venda.getItens().get(venda.getItens().indexOf(item));
         iv = itemEditavel;
+        calcularValorVenda();
     }
 
     public void retirarItem(ItemVenda item) {
@@ -158,34 +181,82 @@ public class RNVenda {
         } else {
             venda.getItens().remove(item);
         }
+        calcularValorVenda();
     }
 
-    public void calcularTotal(){
+    private void calcularValorVenda() {
         BigDecimal totalItens = BigDecimal.ZERO;
-        for(ItemVenda iv : venda.getItens()){
+        for (ItemVenda iv : venda.getItens()) {
             totalItens = totalItens.add(iv.getTotalItem());
         }
         venda.setValor(totalItens);
     }
-    
-    public void adicionarPagamento(Pagamento pagamento){
-        if(venda.getValorNaoPago().compareTo(pagamento.getValor()) < 0){
+
+    public void adicionarPagamento(Pagamento pagamento) {
+        if (venda.getValorNaoPago().compareTo(pagamento.getValor()) < 0) {
             mensagem = "Valor desse pagamento é maior que o valor não pago!";
             return;
         }
         pagamento.setTipo(StringUtils.padronizar(pagamento.getTipo()));
         venda.getPagamentos().add(pagamento);
     }
-    
-    public void retirarPagamento(Pagamento pagamento){
+
+    public void retirarPagamento(Pagamento pagamento) {
         venda.getPagamentos().remove(pagamento);
     }
-    
-    public void cancelarVenda(){
+
+    public void cancelarVenda() {
         for (ItemVenda iv : venda.getItens()) {
-            while(!estoqueDao.adicionarAoEstoque(iv)){
+            if (checarEstoque && !iv.getProduto().getSugestao()) {
+                while (!estoqueDao.adicionarAoEstoque(iv)) {
+                }
             }
         }
     }
-    
+
+    public void finalizarVenda() {
+        editandoVenda = editandoVenda == null ? false : editandoVenda;
+        if(editandoVenda){
+            atualizarVenda();
+        } else {
+            inserirVenda();
+        }
+    }
+
+    private void inserirVenda() {
+        vendaDao.setVenda(venda);
+        if (!vendaDao.inserir()) {
+            mensagem = "Erro ao inserir venda!";
+            return;
+        }
+        for (Pagamento pgmt : venda.getPagamentos()) {
+            pagamentoDao.setPagamento(pgmt);
+            while (!pagamentoDao.inserir()) {
+            }
+        }
+        for (ItemVenda item : venda.getItens()) {
+            itemDao.setItem(item);
+            while (!itemDao.inserir()) {
+            }
+        }
+    }
+
+    private void atualizarVenda() {
+        vendaDao.setVenda(venda);
+        if (!vendaDao.atualizar()) {
+            mensagem = "Erro ao atualizar venda!";
+            return;
+        }
+        for (Pagamento pgmt : venda.getPagamentos()) {
+            pagamentoDao.setPagamento(pgmt);
+            while (!pagamentoDao.atualizar()) {
+            }
+        }
+        for (ItemVenda item : venda.getItens()) {
+            itemDao.setItem(item);
+            while (!itemDao.atualizar()) {
+            }
+        }
+    }
+
 }

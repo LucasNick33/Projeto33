@@ -18,7 +18,6 @@ public class VendaDao {
     private String mensagem;
     private Timestamp dataInicial;
     private Timestamp dataFinal;
-    private Boolean ativo;
 
     public Venda getVenda() {
         return venda;
@@ -42,14 +41,6 @@ public class VendaDao {
 
     public void setDataFinal(Timestamp dataFinal) {
         this.dataFinal = dataFinal;
-    }
-
-    public Boolean getAtivo() {
-        return ativo;
-    }
-
-    public void setAtivo(Boolean ativo) {
-        this.ativo = ativo;
     }
 
     public String getMensagem() {
@@ -101,35 +92,40 @@ public class VendaDao {
     public List<Venda> listar() {
         dataInicial = dataInicial == null ? new Timestamp(0l) : dataInicial;
         dataFinal = dataFinal == null ? new Timestamp(Long.MAX_VALUE) : dataFinal;
-        ativo = ativo == null ? false : ativo;
+        venda.setAtivo(venda.getAtivo() == null ? false : venda.getAtivo());
+        venda.setPago(venda.getPago() == null ? false : venda.getPago());
         Session s = BaseDao.getConexao();
         List<Venda> vendas = new ArrayList<>();
         try {
             Query query;
             if (venda.getIdCliente() != null && venda.getIdUsuario() != null && dataInicial != null && dataFinal != null) {
-                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idCliente = ? AND v.idUsuario = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? ORDER BY v.dataVenda, v.valor");
+                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idCliente = ? AND v.idUsuario = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? AND v.pago = ? ORDER BY v.dataVenda, v.valor");
                 query.setParameter(0, venda.getIdCliente());
                 query.setParameter(1, venda.getIdUsuario());
                 query.setParameter(2, dataInicial);
                 query.setParameter(3, dataFinal);
-                query.setParameter(4, ativo);
+                query.setParameter(4, venda.getAtivo());
+                query.setParameter(5, venda.getPago());
             } else if (venda.getIdCliente() != null && dataInicial != null && dataFinal != null) {
-                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idCliente = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? ORDER BY v.dataVenda, v.valor");
+                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idCliente = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? AND v.pago = ? ORDER BY v.dataVenda, v.valor");
                 query.setParameter(0, venda.getIdCliente());
                 query.setParameter(1, dataInicial);
                 query.setParameter(2, dataFinal);
-                query.setParameter(3, ativo);
+                query.setParameter(3, venda.getAtivo());
+                query.setParameter(4, venda.getPago());
             } else if (venda.getIdUsuario() != null && dataInicial != null && dataFinal != null) {
-                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idUsuario = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? ORDER BY v.dataVenda, v.valor");
+                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idUsuario = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? AND v.pago = ? ORDER BY v.dataVenda, v.valor");
                 query.setParameter(0, venda.getIdUsuario());
                 query.setParameter(1, dataInicial);
                 query.setParameter(2, dataFinal);
-                query.setParameter(3, ativo);
+                query.setParameter(3, venda.getAtivo());
+                query.setParameter(4, venda.getPago());
             } else {
-                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.dataVenda BETWEEN ? AND ? AND v.ativo = ? ORDER BY v.dataVenda, v.valor");
+                query = s.createQuery("SELECT Venda FROM Venda v WHERE v.dataVenda BETWEEN ? AND ? AND v.ativo = ? AND v.pago = ? ORDER BY v.dataVenda, v.valor");
                 query.setParameter(0, dataInicial);
                 query.setParameter(1, dataFinal);
-                query.setParameter(2, ativo);
+                query.setParameter(2, venda.getAtivo());
+                query.setParameter(3, venda.getPago());
             }
             vendas = query.list();
         } catch (Exception ex) {
