@@ -1,5 +1,5 @@
 
-package util;
+package dao;
 
 import beans.Usuario;
 

@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import util.VariaveisGlobais;
 
 public class UsuarioDao {
 
