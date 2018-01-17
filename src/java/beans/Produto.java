@@ -3,6 +3,7 @@ package beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -26,8 +27,6 @@ public class Produto implements Serializable {
     private String categoria;
     private BigDecimal porcentagemDesconto;
     private Boolean sugestao;
-    private Timestamp dataGarantia;
-    private BigDecimal porcentagemGarantia;
     private Boolean ativo;
     
     public Long getId() {
@@ -102,22 +101,6 @@ public class Produto implements Serializable {
         this.sugestao = sugestao;
     }
 
-    public Timestamp getDataGarantia() {
-        return dataGarantia;
-    }
-
-    public void setDataGarantia(Timestamp dataGarantia) {
-        this.dataGarantia = dataGarantia;
-    }
-
-    public BigDecimal getPorcentagemGarantia() {
-        return porcentagemGarantia;
-    }
-
-    public void setPorcentagemGarantia(BigDecimal porcentagemGarantia) {
-        this.porcentagemGarantia = porcentagemGarantia;
-    }
-
     public Boolean getAtivo() {
         return ativo;
     }
@@ -129,6 +112,24 @@ public class Produto implements Serializable {
     @Override
     public String toString(){
         return getCategoria() + ": " + getMarca() + " " + getNome() + " = " + NumUtils.formataValor(getPrecoVenda());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Produto other = (Produto) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
     }
     
 }

@@ -1,0 +1,143 @@
+package rn;
+
+import beans.Estoque;
+import beans.ItemVenda;
+import beans.Produto;
+import beans.Venda;
+import dao.EstoqueDao;
+import dao.VariaveisGlobais;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+public class RNVenda {
+
+    private Venda venda;
+    private String mensagem;
+    private final EstoqueDao estoqueDao;
+    private final Boolean checarEstoque;
+    private ItemVenda item;
+    private ItemVenda itemEditavel;
+
+    public RNVenda() {
+        venda = new Venda();
+        venda.setId(Calendar.getInstance().getTimeInMillis());
+        venda.setItens(new ArrayList<>());
+        venda.setPagamentos(new ArrayList<>());
+
+        estoqueDao = new EstoqueDao();
+        estoqueDao.setEstoque(new Estoque());
+        estoqueDao.getEstoque().setNome(VariaveisGlobais.usuario.getEstoque());
+
+        checarEstoque = true;
+    }
+
+    public Venda getVenda() {
+        return venda;
+    }
+
+    public void setVenda(Venda venda) {
+        this.venda = venda;
+    }
+
+    public ItemVenda getItem() {
+        return item;
+    }
+
+    public void setItem(ItemVenda item) {
+        this.item = item;
+        itemEditavel = item.copiar();
+    }
+
+    public ItemVenda getItemEditavel() {
+        return itemEditavel;
+    }
+
+    public void setItemEditavel(ItemVenda itemEditavel) {
+        this.itemEditavel = itemEditavel;
+    }
+
+    public String getMensagem() {
+        return mensagem;
+    }
+
+    public void setMensagem(String mensagem) {
+        this.mensagem = mensagem;
+    }
+
+    public void adicionarItem(Produto produto, BigDecimal quantidade) {
+        for (ItemVenda iv : venda.getItens()) {
+            if(iv.getProduto().equals(produto)){
+                item = iv;
+                itemEditavel = iv.copiar();
+                itemEditavel.setQuantidade(itemEditavel.getQuantidade().add(quantidade));
+                alterarItem();
+                return;
+            }
+        }
+        
+        if (checarEstoque && !produto.getSugestao()) {
+            List<Estoque> estoque = estoqueDao.listar(produto);
+            if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(quantidade) < 0) {
+                mensagem = "Produto sem estoque!";
+                return;
+            }
+        }
+
+        ItemVenda item = new ItemVenda();
+        item.setId(Calendar.getInstance().getTimeInMillis());
+        item.setIdVenda(venda.getId());
+        item.setProduto(produto);
+        item.setQuantidade(quantidade);
+
+        if (checarEstoque && !produto.getSugestao()) {
+            if (estoqueDao.retirarDoEstoque(item)) {
+                venda.getItens().add(item);
+            }
+        } else {
+            venda.getItens().add(item);
+        }
+    }
+
+    public void alterarItem() {
+        if (itemEditavel.getQuantidade().compareTo(BigDecimal.ZERO) <= 0) {
+            item = itemEditavel;
+            retirarItem();
+            return;
+        }
+
+        BigDecimal diferencaQuantidade = itemEditavel.getQuantidade().subtract(item.getQuantidade());
+        if (checarEstoque && !itemEditavel.getProduto().getSugestao() && !diferencaQuantidade.equals(BigDecimal.ZERO)) {
+            List<Estoque> estoque = estoqueDao.listar(itemEditavel.getProduto());
+            if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(diferencaQuantidade) < 0) {
+                itemEditavel.setQuantidade(item.getQuantidade());
+            } else {
+                BigDecimal quantidade = itemEditavel.getQuantidade();
+                itemEditavel.setQuantidade(diferencaQuantidade.negate());
+                if(estoqueDao.adicionarAoEstoque(itemEditavel)){
+                    itemEditavel.setQuantidade(quantidade);
+                } else {
+                    itemEditavel.setQuantidade(item.getQuantidade());
+                }
+            }
+        }
+
+        if (!Permissao.temPermissao(VariaveisGlobais.usuario.getPermissoes(), Permissao.DESCONTO_ITEM_VENDA) || itemEditavel.getPorcentagemDesconto().compareTo(itemEditavel.getProduto().getPorcentagemDesconto()) > 0) {
+            itemEditavel.setPorcentagemDesconto(item.getPorcentagemDesconto());
+        }
+
+        item = itemEditavel;
+    }
+
+    public void retirarItem() {
+        if (checarEstoque && !item.getProduto().getSugestao()) {
+            if (estoqueDao.adicionarAoEstoque(item)) {
+                venda.getItens().remove(item);
+            }
+        } else {
+            venda.getItens().remove(item);
+        }
+    }
+
+}

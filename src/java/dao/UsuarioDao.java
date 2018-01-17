@@ -104,7 +104,7 @@ public class UsuarioDao {
             usuarios = query.list();
             if(!usuarios.isEmpty()){
                 login = true;
-                VariaveisGlobais.usuario = usuario;
+                VariaveisGlobais.usuario = usuarios.get(0);
             } else {
                 mensagem = "Nome ou senha incorreto(s)!";
             }

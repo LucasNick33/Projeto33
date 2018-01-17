@@ -8,7 +8,7 @@ public class NumUtils {
         if (valor == null){
             return "R$ 0,00";
         }
-        BigDecimal valorArredondado = valor.setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal valorArredondado = arredondar(valor, 2);
         return "R$ " + valorArredondado.toPlainString().replace('.', ',');
     }
     
@@ -18,6 +18,17 @@ public class NumUtils {
         }
         str = str.replace(',', '.').replace("R$ ", "");
         return new BigDecimal(str);
+    }
+    
+    public static BigDecimal arredondar(BigDecimal valor, int casasDecimais){
+        return valor.setScale(casasDecimais, BigDecimal.ROUND_HALF_UP);
+    }
+    
+    public static String quantidade(BigDecimal valor){
+        if(valor.compareTo(new BigDecimal(valor.intValue())) == 0){
+            return arredondar(valor, 0).toString();
+        }
+        return arredondar(valor, 3).toString().replace('.', ',');
     }
     
 }

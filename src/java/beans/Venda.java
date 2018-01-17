@@ -21,6 +21,7 @@ public class Venda implements Serializable {
     private BigDecimal total;
     private BigDecimal porcentagemDesconto;
     private String estoque;
+    private Boolean ativo;
     @Transient
     private List<ItemVenda> itens;
     @Transient
@@ -72,6 +73,14 @@ public class Venda implements Serializable {
 
     public void setEstoque(String estoque) {
         this.estoque = estoque;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
     }
 
     public List<ItemVenda> getItens() {

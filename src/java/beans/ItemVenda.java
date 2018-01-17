@@ -2,11 +2,13 @@ package beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import util.NumUtils;
 
 @Entity
 public class ItemVenda implements Serializable {
@@ -22,8 +24,8 @@ public class ItemVenda implements Serializable {
     private BigDecimal quantidade;
     private BigDecimal porcentagemDesconto;
     private Boolean sugestao;
-    private Timestamp dataGarantia;
-    private BigDecimal porcentagemGarantia;
+    @Transient
+    private Produto produto;
 
     public Long getId() {
         return id;
@@ -89,20 +91,53 @@ public class ItemVenda implements Serializable {
         this.sugestao = sugestao;
     }
 
-    public Timestamp getDataGarantia() {
-        return dataGarantia;
+    public Produto getProduto() {
+        return produto;
     }
 
-    public void setDataGarantia(Timestamp dataGarantia) {
-        this.dataGarantia = dataGarantia;
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+        this.setIdProduto(produto.getId());
+        this.setPrecoCompra(produto.getPrecoCompra());
+        this.setPrecoVenda(produto.getPrecoVenda());
+        this.setSugestao(produto.getSugestao());
     }
 
-    public BigDecimal getPorcentagemGarantia() {
-        return porcentagemGarantia;
+    public ItemVenda copiar(){
+        ItemVenda item = new ItemVenda();
+        item.id = id;
+        item.idVenda = idVenda;
+        item.idProduto = idProduto;
+        item.porcentagemDesconto = porcentagemDesconto;
+        item.produto = produto;
+        item.precoCompra = precoCompra;
+        item.precoVenda = precoVenda;
+        item.quantidade = quantidade;
+        item.sugestao = sugestao;
+        return item;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ItemVenda other = (ItemVenda) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
     }
 
-    public void setPorcentagemGarantia(BigDecimal porcentagemGarantia) {
-        this.porcentagemGarantia = porcentagemGarantia;
+    @Override
+    public String toString(){
+        return produto.getMarca() + " " + produto.getNome() + " " + NumUtils.quantidade(quantidade) + " X " + NumUtils.formataValor(precoVenda) + " = " + NumUtils.formataValor(precoCompra.multiply(quantidade));
     }
     
 }

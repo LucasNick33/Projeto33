@@ -45,13 +45,47 @@ public enum Permissao {
         return null;
     }
 
+    private static Boolean containsId(String permissoes, Permissao permissao) {
+        for (String str : permissoes.split(",")) {
+            int id = 0;
+            try {
+                id = Integer.valueOf(str.trim());
+            } catch (NumberFormatException ex) {
+            }
+            if (permissao.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Boolean containsDescricao(String permissoes, Permissao permissao) {
+        for (String str : permissoes.split(",")) {
+            if (permissao.getDescricao().equalsIgnoreCase(str.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static Boolean temPermissao(String permissoes, Permissao permissao){
+        return containsId(permissoes, permissao) ? true : containsDescricao(permissoes, permissao);
+    }
+    
     public static String idParaDescricao(String str) {
         String ret = " ";
         for (String s : str.split(",")) {
-            if(s.isEmpty()){
+            if (s.isEmpty()) {
                 continue;
             }
-            int id = Integer.valueOf(s.trim());
+            int id = 0;
+            try {
+                id = Integer.valueOf(s.trim());
+            } catch (NumberFormatException ex) {
+            }
+            if (id == 0) {
+                continue;
+            }
             Permissao p = getPermissaoPorId(id);
             if (p != null) {
                 ret += p.getDescricao() + ",";
@@ -63,13 +97,13 @@ public enum Permissao {
     public static String descricaoParaId(String str) {
         String ret = " ";
         for (String s : str.split(",")) {
-            if(s.isEmpty()){
+            if (s.isEmpty()) {
                 continue;
             }
             String desc = s.trim();
             Permissao p = getPermissaoPorDescricao(desc);
             if (p != null) {
-                ret += p.getId()+ ",";
+                ret += p.getId() + ",";
             }
         }
         return ret.substring(0, ret.length() - 1).trim();
