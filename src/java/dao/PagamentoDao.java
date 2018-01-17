@@ -1,6 +1,5 @@
 package dao;
 
-import beans.ItemVenda;
 import beans.Pagamento;
 import beans.Venda;
 import java.util.ArrayList;
@@ -69,9 +68,9 @@ public class PagamentoDao {
     return pagamentos;
     }
     
-    public List<Pagamento> listarTipos(){
+    public List<String> listarTipos(){
         Session s = BaseDao.getConexao();
-        List<Pagamento> pagamentos = new ArrayList<>();
+        List<String> pagamentos = new ArrayList<>();
         try{
             Query query = s.createQuery("SELECT p.tipo FROM Pagamento p GROUP BY p.tipo ORDER BY p.tipo");
             pagamentos = query.list();
