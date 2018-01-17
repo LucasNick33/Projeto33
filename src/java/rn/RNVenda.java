@@ -8,9 +8,11 @@ import beans.Venda;
 import dao.EstoqueDao;
 import dao.VariaveisGlobais;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import util.StringUtils;
 
 public class RNVenda {
 
@@ -28,6 +30,7 @@ public class RNVenda {
         venda.setItens(new ArrayList<>());
         venda.setPagamentos(new ArrayList<>());
         venda.setValor(BigDecimal.ZERO);
+        venda.setDataVenda(new Timestamp(venda.getId()));
 
         estoqueDao = new EstoqueDao();
         estoqueDao.setEstoque(new Estoque());
@@ -149,6 +152,8 @@ public class RNVenda {
         if (checarEstoque && !item.getProduto().getSugestao()) {
             if (estoqueDao.adicionarAoEstoque(item)) {
                 venda.getItens().remove(item);
+            } else {
+                mensagem = "Erro ao retirar item de venda!";
             }
         } else {
             venda.getItens().remove(item);
@@ -168,11 +173,19 @@ public class RNVenda {
             mensagem = "Valor desse pagamento é maior que o valor não pago!";
             return;
         }
+        pagamento.setTipo(StringUtils.padronizar(pagamento.getTipo()));
         venda.getPagamentos().add(pagamento);
     }
     
     public void retirarPagamento(Pagamento pagamento){
         venda.getPagamentos().remove(pagamento);
+    }
+    
+    public void cancelarVenda(){
+        for (ItemVenda iv : venda.getItens()) {
+            while(!estoqueDao.adicionarAoEstoque(iv)){
+            }
+        }
     }
     
 }

@@ -3,6 +3,7 @@ package beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.sql.Timestamp;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ public class Venda implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Cliente.class)
     private Long idCliente;
     private BigDecimal valor;
+    private Timestamp dataVenda;
     private BigDecimal porcentagemDesconto;
     private String estoque;
     private Boolean ativo;
@@ -58,6 +60,14 @@ public class Venda implements Serializable {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
+    }
+
+    public Timestamp getDataVenda() {
+        return dataVenda;
+    }
+
+    public void setDataVenda(Timestamp dataVenda) {
+        this.dataVenda = dataVenda;
     }
 
     public BigDecimal getPorcentagemDesconto() {
