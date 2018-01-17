@@ -4,12 +4,20 @@ import java.math.BigDecimal;
 
 public class NumUtils {
     
-    public static String formataValor(BigDecimal valor){
+    public static String formataValorMonetario(BigDecimal valor){
         if (valor == null){
             return "R$ 0,00";
         }
         BigDecimal valorArredondado = arredondar(valor, 2);
         return "R$ " + valorArredondado.toPlainString().replace('.', ',');
+    }
+    
+    public static String formataValor(BigDecimal valor){
+        if (valor == null){
+            return "0,00";
+        }
+        BigDecimal valorArredondado = arredondar(valor, 2);
+        return valorArredondado.toPlainString().replace('.', ',');
     }
     
     public static BigDecimal desformataValor(String str){

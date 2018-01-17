@@ -111,7 +111,7 @@ public class Produto implements Serializable {
     
     @Override
     public String toString(){
-        return getCategoria() + ": " + getMarca() + " " + getNome() + " = " + NumUtils.formataValor(getPrecoVenda());
+        return getCategoria() + ": " + getMarca() + " " + getNome() + " = " + NumUtils.formataValorMonetario(getPrecoVenda());
     }
 
     @Override

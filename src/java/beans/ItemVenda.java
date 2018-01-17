@@ -2,6 +2,7 @@ package beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -117,6 +118,30 @@ public class ItemVenda implements Serializable {
         return item;
     }
     
+    public BigDecimal getDesconto(){
+        return getValorItem().subtract(getTotalItem());
+    }
+    
+    public void setDesconto(BigDecimal valor){
+        porcentagemDesconto = valor.divide(getValorItem(), MathContext.DECIMAL128).multiply(new BigDecimal(100));
+    }
+    
+    /**
+     *
+     * @return preço de venda x quantidade
+     */
+    public BigDecimal getValorItem(){
+        return getPrecoVenda().multiply(getQuantidade());
+    }
+    
+    /**
+     *
+     * @return (preço de venda x quantidade) - desconto
+     */
+    public BigDecimal getTotalItem(){
+        return getValorItem().multiply(getPorcentagemDesconto().divide(new BigDecimal(100), MathContext.DECIMAL128));
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -137,7 +162,7 @@ public class ItemVenda implements Serializable {
 
     @Override
     public String toString(){
-        return produto.getMarca() + " " + produto.getNome() + " " + NumUtils.quantidade(quantidade) + " X " + NumUtils.formataValor(precoVenda) + " = " + NumUtils.formataValor(precoCompra.multiply(quantidade));
+        return produto.getNome() + " (" + NumUtils.quantidade(quantidade) + " X " + NumUtils.formataValor(precoVenda) + ") - " + NumUtils.formataValor(getDesconto())  + " = " + NumUtils.formataValor(getTotalItem());
     }
     
 }

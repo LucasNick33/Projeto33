@@ -2,6 +2,7 @@ package beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -18,7 +19,7 @@ public class Venda implements Serializable {
     private Long idUsuario;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Cliente.class)
     private Long idCliente;
-    private BigDecimal total;
+    private BigDecimal valor;
     private BigDecimal porcentagemDesconto;
     private String estoque;
     private Boolean ativo;
@@ -51,14 +52,14 @@ public class Venda implements Serializable {
         this.idCliente = idCliente;
     }
 
-    public BigDecimal getTotal() {
-        return total;
+    public BigDecimal getValor() {
+        return valor;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
     }
-
+    
     public BigDecimal getPorcentagemDesconto() {
         return porcentagemDesconto;
     }
@@ -97,6 +98,22 @@ public class Venda implements Serializable {
 
     public void setPagamentos(List<Pagamento> pagamentos) {
         this.pagamentos = pagamentos;
+    }
+    
+    public BigDecimal getDesconto(){
+        return valor.subtract(getTotal());
+    }
+    
+    public void setDesconto(BigDecimal valor){
+        porcentagemDesconto = valor.divide(this.valor, MathContext.DECIMAL128).multiply(new BigDecimal(100));
+    }
+    
+    /**
+     *
+     * @return valor da venda - desconto
+     */
+    public BigDecimal getTotal(){
+        return valor.multiply(porcentagemDesconto.divide(new BigDecimal(100), MathContext.DECIMAL128));
     }
     
 }

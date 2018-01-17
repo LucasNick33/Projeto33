@@ -7,6 +7,7 @@ import beans.Venda;
 import dao.EstoqueDao;
 import dao.VariaveisGlobais;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,6 +26,7 @@ public class RNVenda {
         venda.setId(Calendar.getInstance().getTimeInMillis());
         venda.setItens(new ArrayList<>());
         venda.setPagamentos(new ArrayList<>());
+        venda.setValor(BigDecimal.ZERO);
 
         estoqueDao = new EstoqueDao();
         estoqueDao.setEstoque(new Estoque());
@@ -94,6 +96,7 @@ public class RNVenda {
         if (checarEstoque && !produto.getSugestao()) {
             if (estoqueDao.retirarDoEstoque(item)) {
                 venda.getItens().add(item);
+                
             }
         } else {
             venda.getItens().add(item);
@@ -102,8 +105,7 @@ public class RNVenda {
 
     public void alterarItem() {
         if (itemEditavel.getQuantidade().compareTo(BigDecimal.ZERO) <= 0) {
-            item = itemEditavel;
-            retirarItem();
+            retirarItem(itemEditavel);
             return;
         }
 
@@ -127,10 +129,11 @@ public class RNVenda {
             itemEditavel.setPorcentagemDesconto(item.getPorcentagemDesconto());
         }
 
-        item = itemEditavel;
+        ItemVenda iv = venda.getItens().get(venda.getItens().indexOf(item));
+        iv = itemEditavel;
     }
 
-    public void retirarItem() {
+    public void retirarItem(ItemVenda item) {
         if (checarEstoque && !item.getProduto().getSugestao()) {
             if (estoqueDao.adicionarAoEstoque(item)) {
                 venda.getItens().remove(item);
@@ -140,4 +143,12 @@ public class RNVenda {
         }
     }
 
+    public void calcularTotal(){
+        BigDecimal totalItens = BigDecimal.ZERO;
+        for(ItemVenda iv : venda.getItens()){
+            totalItens = totalItens.add(iv.getTotalItem());
+        }
+        venda.setValor(totalItens);
+    }
+    
 }
