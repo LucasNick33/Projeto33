@@ -10,10 +10,9 @@ import dao.ClienteDao;
 import dao.EstoqueDao;
 import dao.ItemVendaDao;
 import dao.PagamentoDao;
-import dao.VariaveisGlobais;
+import util.VariaveisGlobais;
 import dao.VendaDao;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -40,8 +39,7 @@ public class RNVenda {
         venda.setId(Calendar.getInstance().getTimeInMillis());
         venda.setItens(new ArrayList<>());
         venda.setPagamentos(new ArrayList<>());
-        venda.setValor(BigDecimal.ZERO);
-        venda.setDataVenda(new Timestamp(venda.getId()));
+        venda.setEstoque(VariaveisGlobais.usuario.getEstoque());
         editandoVenda = false;
 
         vendaDao = new VendaDao();

@@ -3,8 +3,10 @@ package beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Objects;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -17,9 +19,16 @@ public class Pagamento implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Venda.class)
     private Long idVenda;
     private BigDecimal valor;
+    @Column(nullable = false)
     private String tipo;
     private Timestamp dataVencimento;
     private Boolean pago;
+    
+    public Pagamento(){
+        valor = BigDecimal.ZERO;
+        dataVencimento = new Timestamp(Calendar.getInstance().getTimeInMillis());
+        pago = true;
+    }
     
     public Long getId() {
         return id;

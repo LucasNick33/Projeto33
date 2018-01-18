@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -31,6 +32,14 @@ public class Venda implements Serializable {
     @Transient
     private List<Pagamento> pagamentos;
 
+    public Venda(){
+        valor = BigDecimal.ZERO;
+        dataVenda = new Timestamp(Calendar.getInstance().getTimeInMillis());
+        porcentagemDesconto = BigDecimal.ZERO;
+        pago = false;
+        ativo = true;
+    }
+    
     public Long getId() {
         return id;
     }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -19,15 +20,27 @@ public class Produto implements Serializable {
     
     @Id
     private Long id;
+    @Column(nullable = false)
     private String nome;
+    @Column(nullable = false)
     private String marca;
     private String descricao;
     private BigDecimal precoCompra;
     private BigDecimal precoVenda;
+    @Column(nullable = false)
     private String categoria;
     private BigDecimal porcentagemDesconto;
     private Boolean sugestao;
     private Boolean ativo;
+    
+    public Produto(){
+        descricao = "";
+        precoCompra = BigDecimal.ZERO;
+        precoVenda = BigDecimal.ZERO;
+        porcentagemDesconto = BigDecimal.ZERO;
+        sugestao = false;
+        ativo = true;
+    }
     
     public Long getId() {
         return id;

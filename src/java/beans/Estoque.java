@@ -3,6 +3,7 @@ package beans;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -21,8 +22,13 @@ public class Estoque implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Produto.class)
     private Long idProduto;
     private BigDecimal quantidade;
+    @Column(nullable = false)
     private String nome;
 
+    public Estoque(){
+        quantidade = BigDecimal.ZERO;
+    }
+    
     public Long getId() {
         return id;
     }

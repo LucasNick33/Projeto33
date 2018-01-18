@@ -1,5 +1,6 @@
 package dao;
 
+import util.VariaveisGlobais;
 import beans.Estoque;
 import beans.ItemVenda;
 import beans.Produto;

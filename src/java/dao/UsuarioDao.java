@@ -1,5 +1,6 @@
 package dao;
 
+import util.VariaveisGlobais;
 import beans.Usuario;
 import java.util.ArrayList;
 import java.util.Calendar;

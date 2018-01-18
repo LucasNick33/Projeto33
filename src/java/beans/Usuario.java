@@ -13,9 +13,10 @@ public class Usuario implements Serializable {
     
     @Id
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nome;
     private String CPF;
+    @Column(nullable = false)
     private String senha;
     private String email;
     private String telefone;
@@ -26,6 +27,16 @@ public class Usuario implements Serializable {
     private BigDecimal porcentagemDesconto;
     @Transient
     private String estoque;
+    
+    public Usuario(){
+        CPF = "";
+        email = "";
+        telefone = "";
+        endereco = "";
+        permissoes = "";
+        ativo = true;
+        porcentagemDesconto = BigDecimal.ZERO;
+    }
     
     public Long getId() {
         return id;

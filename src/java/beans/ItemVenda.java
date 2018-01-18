@@ -28,6 +28,14 @@ public class ItemVenda implements Serializable {
     @Transient
     private Produto produto;
 
+    public ItemVenda(){
+        precoCompra = BigDecimal.ZERO;
+        precoVenda = BigDecimal.ZERO;
+        quantidade = BigDecimal.ZERO;
+        porcentagemDesconto = BigDecimal.ZERO;
+        sugestao = false;
+    }
+    
     public Long getId() {
         return id;
     }

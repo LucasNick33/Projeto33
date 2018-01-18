@@ -12,7 +12,7 @@ public class Cliente implements Serializable {
     
     @Id
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nome;
     private String CPF;
     private String email;
@@ -21,6 +21,15 @@ public class Cliente implements Serializable {
     private Timestamp dataNascimento;
     private Boolean ativo;
     private BigDecimal limiteDebto;
+    
+    public Cliente(){
+        CPF = "";
+        email = "";
+        telefone = "";
+        endereco = "";
+        ativo = true;
+        limiteDebto = BigDecimal.ZERO;
+    }
     
     public Long getId() {
         return id;
