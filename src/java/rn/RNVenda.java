@@ -196,6 +196,9 @@ public class RNVenda {
     private void calcularValorVenda() {
         BigDecimal totalItens = BigDecimal.ZERO;
         for (ItemVenda iv : venda.getItens()) {
+            if(iv.getProduto().getSugestao()){
+               continue;
+            }
             totalItens = totalItens.add(iv.getTotalItem());
         }
         venda.setValor(totalItens);
