@@ -22,18 +22,18 @@ import util.StringUtils;
 public class RNVenda {
 
     private Venda venda;
-    private VendaDao vendaDao;
+    private final VendaDao vendaDao;
     private String mensagem;
     private final EstoqueDao estoqueDao;
     private final Boolean checarEstoque;
     private ItemVenda item;
     private ItemVenda itemEditavel;
     private Pagamento pagamento;
-    private PagamentoDao pagamentoDao;
-    private ItemVendaDao itemDao;
+    private final PagamentoDao pagamentoDao;
+    private final ItemVendaDao itemDao;
     private Boolean editandoVenda;
     private Cliente cliente;
-    private ClienteDao clienteDao;
+    private final ClienteDao clienteDao;
 
     public RNVenda() {
         venda = new Venda();
@@ -42,6 +42,7 @@ public class RNVenda {
         venda.setPagamentos(new ArrayList<>());
         venda.setValor(BigDecimal.ZERO);
         venda.setDataVenda(new Timestamp(venda.getId()));
+        editandoVenda = false;
 
         vendaDao = new VendaDao();
 
@@ -90,14 +91,6 @@ public class RNVenda {
 
     public void setPagamento(Pagamento pagamento) {
         this.pagamento = pagamento;
-    }
-
-    public Boolean getEditandoVenda() {
-        return editandoVenda;
-    }
-
-    public void setEditandoVenda(Boolean editandoVenda) {
-        this.editandoVenda = editandoVenda;
     }
 
     public Cliente getCliente() {
@@ -246,7 +239,7 @@ public class RNVenda {
             return;
         }
         
-        if (editandoVenda == null ? false : editandoVenda) {
+        if (editandoVenda) {
             atualizarVenda();
         } else {
             inserirVenda();
@@ -289,4 +282,11 @@ public class RNVenda {
         }
     }
 
+    public void carregarVenda(Venda venda){
+        editandoVenda = true;
+        venda.setItens(itemDao.listar(venda));
+        venda.setPagamentos(pagamentoDao.listar(venda));
+        this.venda = venda;
+    }
+    
 }
