@@ -1,10 +1,12 @@
 package rn;
 
+import beans.Cliente;
 import beans.Estoque;
 import beans.ItemVenda;
 import beans.Pagamento;
 import beans.Produto;
 import beans.Venda;
+import dao.ClienteDao;
 import dao.EstoqueDao;
 import dao.ItemVendaDao;
 import dao.PagamentoDao;
@@ -30,6 +32,8 @@ public class RNVenda {
     private PagamentoDao pagamentoDao;
     private ItemVendaDao itemDao;
     private Boolean editandoVenda;
+    private Cliente cliente;
+    private ClienteDao clienteDao;
 
     public RNVenda() {
         venda = new Venda();
@@ -48,6 +52,9 @@ public class RNVenda {
         estoqueDao = new EstoqueDao();
         estoqueDao.setEstoque(new Estoque());
         estoqueDao.getEstoque().setNome(VariaveisGlobais.usuario.getEstoque());
+
+        cliente = new Cliente();
+        clienteDao = new ClienteDao();
 
         checarEstoque = true;
     }
@@ -91,6 +98,15 @@ public class RNVenda {
 
     public void setEditandoVenda(Boolean editandoVenda) {
         this.editandoVenda = editandoVenda;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+        clienteDao.setCliente(cliente);
     }
 
     public String getMensagem() {
@@ -215,8 +231,22 @@ public class RNVenda {
     }
 
     public void finalizarVenda() {
-        editandoVenda = editandoVenda == null ? false : editandoVenda;
-        if(editandoVenda){
+        if(VariaveisGlobais.usuario.getPorcentagemDesconto().compareTo(venda.getPorcentagemDesconto()) < 0){
+            mensagem = "Usuário não tem permissão para dar essa porcentagem de desconto na venda!";
+            return;
+        }
+        
+        if (editandoVenda && !Permissao.temPermissao(VariaveisGlobais.usuario.getPermissoes(), Permissao.EDITAR_VENDA)) {
+            mensagem = "Usuário não tem permissão para editar venda!";
+            return;
+        }
+
+        if (venda.getValorNaoPago().compareTo(BigDecimal.ZERO) > 0 && (cliente.getLimiteDebto() == null || cliente.getLimiteDebto().compareTo(clienteDao.debto().add(venda.getValorNaoPago())) < 0)) {
+            mensagem = "A venda não foi paga e o cliente não tem limite de debto disponível!";
+            return;
+        }
+        
+        if (editandoVenda == null ? false : editandoVenda) {
             atualizarVenda();
         } else {
             inserirVenda();

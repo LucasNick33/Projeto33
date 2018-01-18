@@ -1,6 +1,7 @@
 package beans;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ public class Cliente implements Serializable {
     private String endereco;
     private Timestamp dataNascimento;
     private Boolean ativo;
+    private BigDecimal limiteDebto;
     
     public Long getId() {
         return id;
@@ -82,6 +84,14 @@ public class Cliente implements Serializable {
 
     public void setAtivo(Boolean ativo) {
         this.ativo = ativo;
+    }
+
+    public BigDecimal getLimiteDebto() {
+        return limiteDebto;
+    }
+
+    public void setLimiteDebto(BigDecimal limiteDebto) {
+        this.limiteDebto = limiteDebto;
     }
     
 }

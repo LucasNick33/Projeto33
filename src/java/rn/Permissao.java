@@ -2,12 +2,13 @@ package rn;
 
 public enum Permissao {
 
-    CADASTRO_USUARIO(1, "Cadastro de usuário"),
-    CADASTRO_PRODUTO(2, "Cadastro de produto"),
-    CADASTRO_CLIENTE(3, "Cadastro de cliente"),
-    CADASTRO_ESTOQUE(4, "Cadastro de estoque"),
-    DESCONTO_ITEM_VENDA(5, "Desconto no item de venda"),
-    CONFIGURACOES(6, "Configurações");
+    CADASTRO_USUARIO(1, "CADASTRO DE USUARIO"),
+    CADASTRO_PRODUTO(2, "CADASTRO DE PRODUTO"),
+    CADASTRO_CLIENTE(3, "CADASTRO DE CLIENTE"),
+    CADASTRO_ESTOQUE(4, "CADASTRO DE ESTOQUE"),
+    DESCONTO_ITEM_VENDA(5, "DESCONTO NO ITEM DE VENDA"),
+    CONFIGURACOES(6, "CONFIGURACOES"),
+    EDITAR_VENDA(7, "EDITAR VENDA");
 
     private final Integer id;
     private final String descricao;

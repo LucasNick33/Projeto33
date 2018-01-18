@@ -81,11 +81,13 @@ public class UsuarioDao {
     public List<Usuario> listar() {
         usuario.setNome(usuario.getNome() == null ? "" : usuario.getNome());
         String nome = "%" + usuario.getNome().trim() + "%";
+        usuario.setAtivo(usuario.getAtivo() == null ? true : usuario.getAtivo());
         Session s = BaseDao.getConexao();
         List<Usuario> usuarios = new ArrayList<>();
         try {
-            Query query = s.createQuery("FROM Usuario u WHERE u.nome like ? ORDER BY u.nome");
+            Query query = s.createQuery("FROM Usuario u WHERE u.nome like ? AND u.ativo = ? ORDER BY u.nome");
             query.setParameter(0, nome);
+            query.setParameter(1, usuario.getAtivo());
             usuarios = query.list();
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);

@@ -3,6 +3,7 @@ package dao;
 
 import beans.Cliente;
 import beans.Usuario;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -83,16 +84,45 @@ public class ClienteDao {
     public List<Usuario> listar() {
         cliente.setNome(cliente.getNome() == null ? "" : cliente.getNome());
         String nome = "%" + cliente.getNome().trim() + "%";
+        cliente.setAtivo(cliente.getAtivo() == null ? true : cliente.getAtivo());
         Session s = BaseDao.getConexao();
         List<Usuario> clientes = new ArrayList<>();
         try {
-            Query query = s.createQuery("FROM Cliente c WHERE c.nome like ? ORDER BY c.nome");
+            Query query = s.createQuery("FROM Cliente c WHERE c.nome like ? AND c.ativo = ? ORDER BY c.nome");
             query.setParameter(0, nome);
+            query.setParameter(1, cliente.getAtivo());
             clientes = query.list();
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
         return clientes;
+    }
+    
+    public BigDecimal debto(){
+        BigDecimal debto = BigDecimal.ZERO;
+        Session s = BaseDao.getConexao();
+        try {
+            Query query = s.createQuery("SELECT SUM(p.valor) FROM Pagamento p INNER JOIN Venda v INNER JOIN Cliente c WHERE v.ativo = true AND c.id = ?");
+            query.setParameter(0, cliente.getId());
+            List<BigDecimal> lista = query.list();
+            BigDecimal valorPago = null;
+            if(!lista.isEmpty()){
+                valorPago = lista.get(0);
+            }
+            query = s.createQuery("SELECT SUM(v.valor - (v.valor * v.porcentagemDesconto / 100)) FROM Venda v INNER JOIN Cliente c WHERE v.ativo = true AND c.id = ?");
+            query.setParameter(0, cliente.getId());
+            lista = query.list();
+            BigDecimal valorComprado = null;
+            if(!lista.isEmpty()){
+                valorComprado = lista.get(0);
+            }
+            if(valorPago != null && valorComprado != null){
+                debto = valorComprado.subtract(valorPago);
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return debto;
     }
     
 }

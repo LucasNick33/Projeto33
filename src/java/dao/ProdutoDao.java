@@ -88,19 +88,22 @@ public class ProdutoDao {
     public List<Produto> listar() {
         Session s = BaseDao.getConexao();
         List<Produto> produtos = new ArrayList<>();
+        produto.setAtivo(produto.getAtivo() == null ? true : produto.getAtivo());
         try {
             if (produto.getId() != null) {
-                Query query = s.createQuery("FROM Produto p WHERE p.id = ? ORDER BY p.categoria, p.marca, p.nome");
+                Query query = s.createQuery("FROM Produto p WHERE p.id = ? AND p.ativo = ? ORDER BY p.categoria, p.marca, p.nome");
                 query.setParameter(0, produto.getId());
+                query.setParameter(1, produto.getAtivo());
                 produtos = query.list();
             } else {
                 String nome = "%" + (produto.getNome() == null ? "" : StringUtils.padronizar(produto.getNome())) + "%";
                 String marca = "%" + (produto.getMarca() == null ? "" : StringUtils.padronizar(produto.getMarca())) + "%";
                 String categoria = "%" + (produto.getCategoria() == null ? "" : StringUtils.padronizar(produto.getCategoria())) + "%";
-                Query query = s.createQuery("FROM Produto p WHERE p.nome like ? AND p.marca like ? AND p.categoria like ? ORDER BY p.categoria, p.marca, p.nome");
+                Query query = s.createQuery("FROM Produto p WHERE p.nome like ? AND p.marca like ? AND p.categoria like ? AND p.ativo = ? ORDER BY p.categoria, p.marca, p.nome");
                 query.setParameter(0, nome);
                 query.setParameter(1, marca);
                 query.setParameter(2, categoria);
+                query.setParameter(3, produto.getAtivo());
                 produtos = query.list();
             }
 

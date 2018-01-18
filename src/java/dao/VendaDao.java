@@ -92,7 +92,7 @@ public class VendaDao {
     public List<Venda> listar() {
         dataInicial = dataInicial == null ? new Timestamp(0l) : dataInicial;
         dataFinal = dataFinal == null ? new Timestamp(Long.MAX_VALUE) : dataFinal;
-        venda.setAtivo(venda.getAtivo() == null ? false : venda.getAtivo());
+        venda.setAtivo(venda.getAtivo() == null ? true : venda.getAtivo());
         venda.setPago(venda.getPago() == null ? false : venda.getPago());
         Session s = BaseDao.getConexao();
         List<Venda> vendas = new ArrayList<>();
