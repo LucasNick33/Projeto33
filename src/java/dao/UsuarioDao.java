@@ -1,6 +1,5 @@
 package dao;
 
-import util.VariaveisGlobais;
 import beans.Usuario;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,7 +106,7 @@ public class UsuarioDao {
             usuarios = query.list();
             if(!usuarios.isEmpty()){
                 login = true;
-                VariaveisGlobais.usuario = usuarios.get(0);
+                usuario = usuarios.get(0);
             } else {
                 mensagem = "Nome ou senha incorreto(s)!";
             }

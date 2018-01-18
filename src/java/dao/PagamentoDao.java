@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 public class PagamentoDao {
+    
     private Pagamento pagamento;
 
     public Pagamento getPagamento() {

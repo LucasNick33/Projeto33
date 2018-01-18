@@ -10,7 +10,7 @@ import dao.ClienteDao;
 import dao.EstoqueDao;
 import dao.ItemVendaDao;
 import dao.PagamentoDao;
-import util.VariaveisGlobais;
+import dao.UsuarioDao;
 import dao.VendaDao;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,27 +33,34 @@ public class RNVenda {
     private Boolean editandoVenda;
     private Cliente cliente;
     private final ClienteDao clienteDao;
+    private final UsuarioDao usuarioDao;
 
-    public RNVenda() {
-        venda = new Venda();
+    public RNVenda(UsuarioDao usuarioDao, ClienteDao clienteDao, VendaDao vendaDao, ItemVendaDao itemDao, EstoqueDao estoqueDao, PagamentoDao pagamentoDao) {
+        this.usuarioDao = usuarioDao;
+
+        venda = vendaDao.getVenda();
         venda.setId(Calendar.getInstance().getTimeInMillis());
+        venda.setIdUsuario(usuarioDao.getUsuario().getId());
         venda.setItens(new ArrayList<>());
         venda.setPagamentos(new ArrayList<>());
-        venda.setEstoque(VariaveisGlobais.usuario.getEstoque());
+        venda.setEstoque(usuarioDao.getUsuario().getEstoque());
         editandoVenda = false;
 
-        vendaDao = new VendaDao();
+        this.vendaDao = vendaDao;
 
-        pagamentoDao = new PagamentoDao();
+        this.pagamentoDao = pagamentoDao;
 
-        itemDao = new ItemVendaDao();
+        this.itemDao = itemDao;
 
-        estoqueDao = new EstoqueDao();
-        estoqueDao.setEstoque(new Estoque());
-        estoqueDao.getEstoque().setNome(VariaveisGlobais.usuario.getEstoque());
+        this.estoqueDao = estoqueDao;
+        this.estoqueDao.setEstoque(new Estoque());
+        this.estoqueDao.getEstoque().setNome(usuarioDao.getUsuario().getEstoque());
 
-        cliente = new Cliente();
-        clienteDao = new ClienteDao();
+        this.clienteDao = clienteDao;
+        if(this.clienteDao.getCliente() == null){
+            this.clienteDao.setCliente(new Cliente());
+        }
+        cliente = this.clienteDao.getCliente();
 
         checarEstoque = true;
     }
@@ -169,7 +176,7 @@ public class RNVenda {
             }
         }
 
-        if (!Permissao.temPermissao(VariaveisGlobais.usuario.getPermissoes(), Permissao.DESCONTO_ITEM_VENDA) || itemEditavel.getPorcentagemDesconto().compareTo(itemEditavel.getProduto().getPorcentagemDesconto()) > 0) {
+        if (!Permissao.temPermissao(usuarioDao.getUsuario().getPermissoes(), Permissao.DESCONTO_ITEM_VENDA) || itemEditavel.getPorcentagemDesconto().compareTo(itemEditavel.getProduto().getPorcentagemDesconto()) > 0) {
             itemEditavel.setPorcentagemDesconto(item.getPorcentagemDesconto());
         }
 
@@ -225,12 +232,12 @@ public class RNVenda {
     }
 
     public void finalizarVenda() {
-        if(VariaveisGlobais.usuario.getPorcentagemDesconto().compareTo(venda.getPorcentagemDesconto()) < 0){
+        if(usuarioDao.getUsuario().getPorcentagemDesconto().compareTo(venda.getPorcentagemDesconto()) < 0){
             mensagem = "Usuário não tem permissão para dar essa porcentagem de desconto na venda!";
             return;
         }
         
-        if (editandoVenda && !Permissao.temPermissao(VariaveisGlobais.usuario.getPermissoes(), Permissao.EDITAR_VENDA)) {
+        if (editandoVenda && !Permissao.temPermissao(usuarioDao.getUsuario().getPermissoes(), Permissao.EDITAR_VENDA)) {
             mensagem = "Usuário não tem permissão para editar venda!";
             return;
         }

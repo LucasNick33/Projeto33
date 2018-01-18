@@ -1,9 +1,9 @@
 package dao;
 
-import util.VariaveisGlobais;
 import beans.Estoque;
 import beans.ItemVenda;
 import beans.Produto;
+import beans.Usuario;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -18,6 +18,7 @@ public class EstoqueDao {
 
     private Estoque estoque;
     private String mensagem;
+    private Usuario usuario;
 
     public Estoque getEstoque() {
         return estoque;
@@ -25,6 +26,14 @@ public class EstoqueDao {
 
     public void setEstoque(Estoque estoque) {
         this.estoque = estoque;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getMensagem() {
@@ -138,7 +147,7 @@ public class EstoqueDao {
             Query query = s.createQuery("UPDATE Estoque SET quantidade = (quantidade - ?) WHERE idProduto = ? AND nome = ?");
             query.setParameter(0, item.getQuantidade());
             query.setParameter(1, item.getIdProduto());
-            query.setParameter(2, VariaveisGlobais.usuario.getEstoque());
+            query.setParameter(2, usuario.getEstoque());
             query.executeUpdate();
             t.commit();
             return true;
@@ -159,7 +168,7 @@ public class EstoqueDao {
             Query query = s.createQuery("UPDATE Estoque SET quantidade = (quantidade + ?) WHERE idProduto = ? AND nome = ?");
             query.setParameter(0, item.getQuantidade());
             query.setParameter(1, item.getIdProduto());
-            query.setParameter(2, VariaveisGlobais.usuario.getEstoque());
+            query.setParameter(2, usuario.getEstoque());
             query.executeUpdate();
             t.commit();
             return true;
