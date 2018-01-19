@@ -6,12 +6,6 @@ import beans.ItemVenda;
 import beans.Pagamento;
 import beans.Produto;
 import beans.Venda;
-import dao.ClienteDao;
-import dao.EstoqueDao;
-import dao.ItemVendaDao;
-import dao.PagamentoDao;
-import dao.UsuarioDao;
-import dao.VendaDao;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,41 +14,27 @@ import util.StringUtils;
 
 public class RNVenda {
 
+    private final VariaveisGlobais variaveisGlobais;
     private Venda venda;
-    private final VendaDao vendaDao;
     private String mensagem;
-    private final EstoqueDao estoqueDao;
     private final Boolean checarEstoque;
     private ItemVenda item;
     private ItemVenda itemEditavel;
     private Pagamento pagamento;
-    private final PagamentoDao pagamentoDao;
-    private final ItemVendaDao itemDao;
     private Boolean editandoVenda;
     private Cliente cliente;
-    private final ClienteDao clienteDao;
-    private final UsuarioDao usuarioDao;
 
-    public RNVenda(UsuarioDao usuarioDao, ClienteDao clienteDao, VendaDao vendaDao, ItemVendaDao itemDao, EstoqueDao estoqueDao, PagamentoDao pagamentoDao) {
-        this.usuarioDao = usuarioDao;
+    public RNVenda(VariaveisGlobais variaveisGlobais) {
+        this.variaveisGlobais = variaveisGlobais;
         
-        this.vendaDao = vendaDao;
-
-        this.pagamentoDao = pagamentoDao;
-
-        this.itemDao = itemDao;
-
-        this.estoqueDao = estoqueDao;
-
-        this.clienteDao = clienteDao;
-        cliente = this.clienteDao.getCliente();
+        cliente = variaveisGlobais.getClienteDao().getCliente();
         
-        venda = vendaDao.getVenda();
+        venda = new Venda();
         venda.setId(Calendar.getInstance().getTimeInMillis());
-        venda.setIdUsuario(usuarioDao.getUsuario().getId());
+        venda.setIdUsuario(variaveisGlobais.getUsuario().getId());
         venda.setItens(new ArrayList<>());
         venda.setPagamentos(new ArrayList<>());
-        venda.setEstoque(usuarioDao.getUsuario().getEstoque());
+        venda.setEstoque(variaveisGlobais.getUsuario().getEstoque());
         editandoVenda = false;
 
         checarEstoque = true;
@@ -99,7 +79,7 @@ public class RNVenda {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-        clienteDao.setCliente(cliente);
+        variaveisGlobais.getClienteDao().setCliente(cliente);
     }
 
     public String getMensagem() {
@@ -122,7 +102,7 @@ public class RNVenda {
         }
 
         if (checarEstoque && !produto.getSugestao()) {
-            List<Estoque> estoque = estoqueDao.listar(produto);
+            List<Estoque> estoque = variaveisGlobais.getEstoqueDao().listar(produto);
             if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(quantidade) < 0) {
                 mensagem = "Produto sem estoque!";
                 return;
@@ -136,7 +116,7 @@ public class RNVenda {
         item.setQuantidade(quantidade);
 
         if (checarEstoque && !produto.getSugestao()) {
-            if (estoqueDao.retirarDoEstoque(item)) {
+            if (variaveisGlobais.getEstoqueDao().retirarDoEstoque(item)) {
                 venda.getItens().add(item);
             } else {
                 mensagem = "erro ao adicionar item de venda!";
@@ -155,14 +135,14 @@ public class RNVenda {
 
         BigDecimal diferencaQuantidade = itemEditavel.getQuantidade().subtract(item.getQuantidade());
         if (checarEstoque && !itemEditavel.getProduto().getSugestao() && !diferencaQuantidade.equals(BigDecimal.ZERO)) {
-            List<Estoque> estoque = estoqueDao.listar(itemEditavel.getProduto());
+            List<Estoque> estoque = variaveisGlobais.getEstoqueDao().listar(itemEditavel.getProduto());
             if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(diferencaQuantidade) < 0) {
                 itemEditavel.setQuantidade(item.getQuantidade());
                 mensagem = "Produto sem estoque!";
             } else {
                 BigDecimal quantidade = itemEditavel.getQuantidade();
                 itemEditavel.setQuantidade(diferencaQuantidade.negate());
-                if (estoqueDao.adicionarAoEstoque(itemEditavel)) {
+                if (variaveisGlobais.getEstoqueDao().adicionarAoEstoque(itemEditavel)) {
                     itemEditavel.setQuantidade(quantidade);
                 } else {
                     itemEditavel.setQuantidade(item.getQuantidade());
@@ -171,7 +151,7 @@ public class RNVenda {
             }
         }
 
-        if (!Permissao.temPermissao(usuarioDao.getUsuario().getPermissoes(), Permissao.DESCONTO_ITEM_VENDA) || itemEditavel.getPorcentagemDesconto().compareTo(itemEditavel.getProduto().getPorcentagemDesconto()) > 0) {
+        if (!Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.DESCONTO_ITEM_VENDA) || itemEditavel.getPorcentagemDesconto().compareTo(itemEditavel.getProduto().getPorcentagemDesconto()) > 0) {
             itemEditavel.setPorcentagemDesconto(item.getPorcentagemDesconto());
         }
 
@@ -182,7 +162,7 @@ public class RNVenda {
 
     public void retirarItem(ItemVenda item) {
         if (checarEstoque && !item.getProduto().getSugestao()) {
-            if (estoqueDao.adicionarAoEstoque(item)) {
+            if (variaveisGlobais.getEstoqueDao().adicionarAoEstoque(item)) {
                 venda.getItens().remove(item);
             } else {
                 mensagem = "Erro ao retirar item de venda!";
@@ -220,24 +200,24 @@ public class RNVenda {
     public void cancelarVenda() {
         for (ItemVenda iv : venda.getItens()) {
             if (checarEstoque && !iv.getProduto().getSugestao()) {
-                while (!estoqueDao.adicionarAoEstoque(iv)) {
+                while (!variaveisGlobais.getEstoqueDao().adicionarAoEstoque(iv)) {
                 }
             }
         }
     }
 
     public void finalizarVenda() {
-        if(usuarioDao.getUsuario().getPorcentagemDesconto().compareTo(venda.getPorcentagemDesconto()) < 0){
+        if(variaveisGlobais.getUsuario().getPorcentagemDesconto().compareTo(venda.getPorcentagemDesconto()) < 0){
             mensagem = "Usuário não tem permissão para dar essa porcentagem de desconto na venda!";
             return;
         }
         
-        if (editandoVenda && !Permissao.temPermissao(usuarioDao.getUsuario().getPermissoes(), Permissao.EDITAR_VENDA)) {
+        if (editandoVenda && !Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.EDITAR_VENDA)) {
             mensagem = "Usuário não tem permissão para editar venda!";
             return;
         }
 
-        if (venda.getValorNaoPago().compareTo(BigDecimal.ZERO) > 0 && (cliente.getLimiteDebto() == null || cliente.getLimiteDebto().compareTo(clienteDao.debto().add(venda.getValorNaoPago())) < 0)) {
+        if (venda.getValorNaoPago().compareTo(BigDecimal.ZERO) > 0 && (cliente.getLimiteDebto() == null || cliente.getLimiteDebto().compareTo(variaveisGlobais.getClienteDao().debto().add(venda.getValorNaoPago())) < 0)) {
             mensagem = "A venda não foi paga e o cliente não tem limite de debto disponível!";
             return;
         }
@@ -250,45 +230,45 @@ public class RNVenda {
     }
 
     private void inserirVenda() {
-        vendaDao.setVenda(venda);
-        if (!vendaDao.inserir()) {
+        variaveisGlobais.getVendaDao().setVenda(venda);
+        if (!variaveisGlobais.getVendaDao().inserir()) {
             mensagem = "Erro ao inserir venda!";
             return;
         }
         for (Pagamento pgmt : venda.getPagamentos()) {
-            pagamentoDao.setPagamento(pgmt);
-            while (!pagamentoDao.inserir()) {
+            variaveisGlobais.getPagamentoDao().setPagamento(pgmt);
+            while (!variaveisGlobais.getPagamentoDao().inserir()) {
             }
         }
         for (ItemVenda item : venda.getItens()) {
-            itemDao.setItem(item);
-            while (!itemDao.inserir()) {
+            variaveisGlobais.getItemDao().setItem(item);
+            while (!variaveisGlobais.getItemDao().inserir()) {
             }
         }
     }
 
     private void atualizarVenda() {
-        vendaDao.setVenda(venda);
-        if (!vendaDao.atualizar()) {
+        variaveisGlobais.getVendaDao().setVenda(venda);
+        if (!variaveisGlobais.getVendaDao().atualizar()) {
             mensagem = "Erro ao atualizar venda!";
             return;
         }
         for (Pagamento pgmt : venda.getPagamentos()) {
-            pagamentoDao.setPagamento(pgmt);
-            while (!pagamentoDao.atualizar()) {
+            variaveisGlobais.getPagamentoDao().setPagamento(pgmt);
+            while (!variaveisGlobais.getPagamentoDao().atualizar()) {
             }
         }
         for (ItemVenda item : venda.getItens()) {
-            itemDao.setItem(item);
-            while (!itemDao.atualizar()) {
+            variaveisGlobais.getItemDao().setItem(item);
+            while (!variaveisGlobais.getItemDao().atualizar()) {
             }
         }
     }
 
     public void carregarVenda(Venda venda){
         editandoVenda = true;
-        venda.setItens(itemDao.listar(venda));
-        venda.setPagamentos(pagamentoDao.listar(venda));
+        venda.setItens(variaveisGlobais.getItemDao().listar(venda));
+        venda.setPagamentos(variaveisGlobais.getPagamentoDao().listar(venda));
         this.venda = venda;
     }
     

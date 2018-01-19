@@ -9,12 +9,19 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import rn.Permissao;
+import rn.VariaveisGlobais;
 
 public class UsuarioDao {
 
+    private final VariaveisGlobais variaveisGlobais;
     private Usuario usuario;
     private String mensagem;
 
+    public UsuarioDao(VariaveisGlobais variaveisGlobais){
+        this.variaveisGlobais = variaveisGlobais;
+    }
+    
     public Usuario getUsuario() {
         return usuario;
     }
@@ -32,6 +39,10 @@ public class UsuarioDao {
     }
 
     public Boolean inserir() {
+        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
+            mensagem = "Usuário não tem permissão para cadastro de usuário!";
+            return false;
+        }
         usuario.setId(Calendar.getInstance().getTimeInMillis());
         Session s = BaseDao.getConexao();
         Transaction t = null;
@@ -56,6 +67,10 @@ public class UsuarioDao {
     }
 
     public Boolean atualizar() {
+        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
+            mensagem = "Usuário não tem permissão para cadastro de usuário!";
+            return false;
+        }
         Session s = BaseDao.getConexao();
         Transaction t = null;
         try {

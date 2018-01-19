@@ -1,4 +1,3 @@
-
 package rn;
 
 import beans.Cliente;
@@ -29,71 +28,9 @@ public class Sessao {
         SESSOES = new ArrayList<>();
     }
     
-    private UsuarioDao usuarioDao;
-    private ClienteDao clienteDao;
-    private ProdutoDao produtoDao;
-    private VendaDao vendaDao;
-    private ItemVendaDao itemDao;
-    private PagamentoDao pagamentoDao;
-    private EstoqueDao estoqueDao;
     private RNVenda rnVenda;
     private String id;
-
-    public UsuarioDao getUsuarioDao() {
-        return usuarioDao;
-    }
-
-    public void setUsuarioDao(UsuarioDao usuarioDao) {
-        this.usuarioDao = usuarioDao;
-    }
-
-    public ClienteDao getClienteDao() {
-        return clienteDao;
-    }
-
-    public void setClienteDao(ClienteDao clienteDao) {
-        this.clienteDao = clienteDao;
-    }
-
-    public ProdutoDao getProdutoDao() {
-        return produtoDao;
-    }
-
-    public void setProdutoDao(ProdutoDao produtoDao) {
-        this.produtoDao = produtoDao;
-    }
-
-    public VendaDao getVendaDao() {
-        return vendaDao;
-    }
-
-    public void setVendaDao(VendaDao vendaDao) {
-        this.vendaDao = vendaDao;
-    }
-
-    public ItemVendaDao getItemDao() {
-        return itemDao;
-    }
-
-    public void setItemDao(ItemVendaDao itemDao) {
-        this.itemDao = itemDao;
-    }
-
-    public PagamentoDao getPagamentoDao() {
-        return pagamentoDao;
-    }
-
-    public void setPagamentoDao(PagamentoDao pagamentoDao) {
-        this.pagamentoDao = pagamentoDao;
-    }
-
-    public EstoqueDao getEstoqueDao() {
-        return estoqueDao;
-    }
-
-    public void setEstoqueDao(EstoqueDao estoqueDao) {
-        this.estoqueDao = estoqueDao;
-    }
+    private VariaveisGlobais variaveisGlobais;
 
     public RNVenda getRnVenda() {
         return rnVenda;
@@ -101,6 +38,14 @@ public class Sessao {
 
     public void setRnVenda(RNVenda rnVenda) {
         this.rnVenda = rnVenda;
+    }
+
+    public VariaveisGlobais getVariaveisGlobais() {
+        return variaveisGlobais;
+    }
+
+    public void setVariaveisGlobais(VariaveisGlobais variaveisGlobais) {
+        this.variaveisGlobais = variaveisGlobais;
     }
 
     public String getId() {
@@ -126,44 +71,47 @@ public class Sessao {
     private void novaSessao(){
         this.id = String.valueOf(Calendar.getInstance().getTimeInMillis());
         
-        usuarioDao = new UsuarioDao();
-        usuarioDao.setUsuario(new Usuario());
+        variaveisGlobais = new VariaveisGlobais();
+        variaveisGlobais.setUsuario(new Usuario());
         
-        clienteDao = new ClienteDao();
+        UsuarioDao usuarioDao = new UsuarioDao(variaveisGlobais);
+        usuarioDao.setUsuario(variaveisGlobais.getUsuario());
+        variaveisGlobais.setUsuarioDao(usuarioDao);
+        
+        ClienteDao clienteDao = new ClienteDao(variaveisGlobais);
         clienteDao.setCliente(new Cliente());
+        variaveisGlobais.setClienteDao(clienteDao);
         
-        produtoDao = new ProdutoDao();
+        ProdutoDao produtoDao = new ProdutoDao(variaveisGlobais);
         produtoDao.setProduto(new Produto());
+        variaveisGlobais.setProdutoDao(produtoDao);
         
-        vendaDao = new VendaDao();
+        VendaDao vendaDao = new VendaDao(variaveisGlobais);
         vendaDao.setVenda(new Venda());
+        variaveisGlobais.setVendaDao(vendaDao);
         
-        itemDao = new ItemVendaDao();
+        ItemVendaDao itemDao = new ItemVendaDao();
         itemDao.setItem(new ItemVenda());
+        variaveisGlobais.setItemDao(itemDao);
         
-        pagamentoDao = new PagamentoDao();
+        PagamentoDao pagamentoDao = new PagamentoDao();
         pagamentoDao.setPagamento(new Pagamento());
+        variaveisGlobais.setPagamentoDao(pagamentoDao);
         
-        estoqueDao = new EstoqueDao();
+        EstoqueDao estoqueDao = new EstoqueDao(variaveisGlobais);
         estoqueDao.setEstoque(new Estoque());
-        estoqueDao.getEstoque().setNome(usuarioDao.getUsuario().getEstoque());
-        estoqueDao.setUsuario(usuarioDao.getUsuario());
+        estoqueDao.getEstoque().setNome(variaveisGlobais.getUsuario().getEstoque());
+        variaveisGlobais.setEstoqueDao(estoqueDao);
         
-        rnVenda = new RNVenda(usuarioDao, clienteDao, vendaDao, itemDao, estoqueDao, pagamentoDao);
+        rnVenda = new RNVenda(variaveisGlobais);
         
         SESSOES.add(this);
     }
     
     private void copiar(Sessao s){
-        this.clienteDao = s.clienteDao;
-        this.estoqueDao = s.estoqueDao;
         this.id = s.id;
-        this.itemDao = s.itemDao;
-        this.pagamentoDao = s.pagamentoDao;
-        this.produtoDao = s.produtoDao;
+        this.variaveisGlobais = s.variaveisGlobais;
         this.rnVenda = s.rnVenda;
-        this.usuarioDao = s.usuarioDao;
-        this.vendaDao = s.vendaDao;
     }
     
 }

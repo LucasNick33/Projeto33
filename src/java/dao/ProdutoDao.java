@@ -9,13 +9,20 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import rn.Permissao;
+import rn.VariaveisGlobais;
 import util.StringUtils;
 
 public class ProdutoDao {
 
+    private final VariaveisGlobais variaveisGlobais;
     private Produto produto;
     private String mensagem;
 
+    public ProdutoDao(VariaveisGlobais variaveisGlobais){
+        this.variaveisGlobais = variaveisGlobais;
+    }
+    
     public Produto getProduto() {
         return produto;
     }
@@ -33,6 +40,10 @@ public class ProdutoDao {
     }
 
     public Boolean inserir() {
+        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_PRODUTO)){
+            mensagem = "Usuário não tem permissão para cadastro de produto!";
+            return false;
+        }
         produto.setId(Calendar.getInstance().getTimeInMillis());
         produto.setNome(StringUtils.padronizar(produto.getNome()));
         produto.setCategoria(StringUtils.padronizar(produto.getCategoria()));
@@ -60,6 +71,10 @@ public class ProdutoDao {
     }
 
     public Boolean atualizar() {
+        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_PRODUTO)){
+            mensagem = "Usuário não tem permissão para cadastro de produto!";
+            return false;
+        }
         produto.setNome(StringUtils.padronizar(produto.getNome()));
         produto.setCategoria(StringUtils.padronizar(produto.getCategoria()));
         produto.setMarca(StringUtils.padronizar(produto.getMarca()));

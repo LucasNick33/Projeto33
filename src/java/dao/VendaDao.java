@@ -1,7 +1,5 @@
 package dao;
 
-import beans.Cliente;
-import beans.Usuario;
 import beans.Venda;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,13 +9,20 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import rn.Permissao;
+import rn.VariaveisGlobais;
 
 public class VendaDao {
 
+    private final VariaveisGlobais variaveisGlobais;
     private Venda venda;
     private String mensagem;
     private Timestamp dataInicial;
     private Timestamp dataFinal;
+
+    public VendaDao(VariaveisGlobais variaveisGlobais) {
+        this.variaveisGlobais = variaveisGlobais;
+    }
 
     public Venda getVenda() {
         return venda;
@@ -71,6 +76,10 @@ public class VendaDao {
     }
 
     public Boolean atualizar() {
+        if (Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.EDITAR_VENDA)) {
+            mensagem = "Usuário não tem permissão para editar venda!";
+            return false;
+        }
         Session s = BaseDao.getConexao();
         Transaction t = null;
         try {
