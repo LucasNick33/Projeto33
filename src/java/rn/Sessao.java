@@ -114,10 +114,10 @@ public class Sessao {
                 }
             }
         }
-        newSession();
+        novaSessao();
     }
     
-    private void newSession(){
+    private void novaSessao(){
         this.id = String.valueOf(Calendar.getInstance().getTimeInMillis());
         
         usuarioDao = new UsuarioDao();
