@@ -27,6 +27,8 @@ public class Usuario implements Serializable {
     private BigDecimal porcentagemDesconto;
     @Transient
     private String estoque;
+    @Transient
+    private Boolean logado;
     
     public Usuario(){
         CPF = "";
@@ -36,6 +38,7 @@ public class Usuario implements Serializable {
         permissoes = "";
         ativo = true;
         porcentagemDesconto = BigDecimal.ZERO;
+        logado = false;
     }
     
     public Long getId() {
@@ -132,6 +135,14 @@ public class Usuario implements Serializable {
 
     public void setEstoque(String estoque) {
         this.estoque = estoque;
+    }
+
+    public Boolean getLogado() {
+        return logado;
+    }
+
+    public void setLogado(Boolean logado) {
+        this.logado = logado;
     }
 
 }

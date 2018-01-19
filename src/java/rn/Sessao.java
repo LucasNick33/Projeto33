@@ -14,10 +14,14 @@ import dao.PagamentoDao;
 import dao.ProdutoDao;
 import dao.UsuarioDao;
 import dao.VendaDao;
+import java.util.Calendar;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 
 @ManagedBean
 public class Sessao {
+    
+    private static List<Sessao> sessoes;
     
     private UsuarioDao usuarioDao;
     private ClienteDao clienteDao;
@@ -27,30 +31,8 @@ public class Sessao {
     private PagamentoDao pagamentoDao;
     private EstoqueDao estoqueDao;
     private RNVenda rnVenda;
+    private String id;
 
-    public Sessao(){
-        usuarioDao = new UsuarioDao();
-        usuarioDao.setUsuario(new Usuario());
-        
-        clienteDao = new ClienteDao();
-        clienteDao.setCliente(new Cliente());
-        
-        produtoDao = new ProdutoDao();
-        produtoDao.setProduto(new Produto());
-        
-        vendaDao = new VendaDao();
-        vendaDao.setVenda(new Venda());
-        
-        itemDao = new ItemVendaDao();
-        itemDao.setItem(new ItemVenda());
-        
-        pagamentoDao = new PagamentoDao();
-        pagamentoDao.setPagamento(new Pagamento());
-        
-        estoqueDao = new EstoqueDao();
-        rnVenda = new RNVenda(usuarioDao, clienteDao, vendaDao, itemDao, estoqueDao, pagamentoDao);
-    }
-    
     public UsuarioDao getUsuarioDao() {
         return usuarioDao;
     }
@@ -113,6 +95,65 @@ public class Sessao {
 
     public void setRnVenda(RNVenda rnVenda) {
         this.rnVenda = rnVenda;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void getSession(String id){
+        if(id != null && !id.isEmpty()){
+            for(Sessao s : sessoes){
+                if(s.id.equals(id)){
+                    copiar(s);
+                    return;
+                }
+            }
+        }
+        newSession();
+    }
+    
+    private void newSession(){
+        this.id = String.valueOf(Calendar.getInstance().getTimeInMillis());
+        
+        usuarioDao = new UsuarioDao();
+        usuarioDao.setUsuario(new Usuario());
+        
+        clienteDao = new ClienteDao();
+        clienteDao.setCliente(new Cliente());
+        
+        produtoDao = new ProdutoDao();
+        produtoDao.setProduto(new Produto());
+        
+        vendaDao = new VendaDao();
+        vendaDao.setVenda(new Venda());
+        
+        itemDao = new ItemVendaDao();
+        itemDao.setItem(new ItemVenda());
+        
+        pagamentoDao = new PagamentoDao();
+        pagamentoDao.setPagamento(new Pagamento());
+        
+        estoqueDao = new EstoqueDao();
+        rnVenda = new RNVenda(usuarioDao, clienteDao, vendaDao, itemDao, estoqueDao, pagamentoDao);
+        
+        sessoes.add(this);
+    }
+    
+    private void copiar(Sessao s){
+        this.clienteDao = s.clienteDao;
+        this.estoqueDao = s.estoqueDao;
+        this.id = s.id;
+        this.itemDao = s.itemDao;
+        this.pagamentoDao = s.pagamentoDao;
+        this.produtoDao = s.produtoDao;
+        this.rnVenda = s.rnVenda;
+        this.usuarioDao = s.usuarioDao;
+        this.vendaDao = s.vendaDao;
     }
     
 }

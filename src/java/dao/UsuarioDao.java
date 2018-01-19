@@ -107,6 +107,7 @@ public class UsuarioDao {
             if(!usuarios.isEmpty()){
                 login = true;
                 usuario = usuarios.get(0);
+                usuario.setLogado(true);
             } else {
                 mensagem = "Nome ou senha incorreto(s)!";
             }
