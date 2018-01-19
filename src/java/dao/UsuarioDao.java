@@ -16,7 +16,6 @@ public class UsuarioDao {
 
     private final VariaveisGlobais variaveisGlobais;
     private Usuario usuario;
-    private String mensagem;
 
     public UsuarioDao(VariaveisGlobais variaveisGlobais){
         this.variaveisGlobais = variaveisGlobais;
@@ -30,17 +29,9 @@ public class UsuarioDao {
         this.usuario = usuario;
     }
 
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
     public Boolean inserir() {
         if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
-            mensagem = "Usuário não tem permissão para cadastro de usuário!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
             return false;
         }
         usuario.setId(Calendar.getInstance().getTimeInMillis());
@@ -50,7 +41,7 @@ public class UsuarioDao {
             t = s.beginTransaction();
             s.save(usuario);
             t.commit();
-            mensagem = "Usuário cadastrado com sucesso!";
+            variaveisGlobais.setMensagem("Usuário cadastrado com sucesso!");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -58,9 +49,9 @@ public class UsuarioDao {
                 t.rollback();
             }
             if(ex.toString().contains("ConstraintViolationException")){
-                mensagem = "Há outro usuário cadastrado com esse nome!";
+                variaveisGlobais.setMensagem("Há outro usuário cadastrado com esse nome!");
             } else {
-                mensagem = "Erro ao cadastrar usuário!";
+                variaveisGlobais.setMensagem("Erro ao cadastrar usuário!");
             }
         }
         return false;
@@ -68,7 +59,7 @@ public class UsuarioDao {
 
     public Boolean atualizar() {
         if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
-            mensagem = "Usuário não tem permissão para cadastro de usuário!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
             return false;
         }
         Session s = BaseDao.getConexao();
@@ -77,7 +68,7 @@ public class UsuarioDao {
             t = s.beginTransaction();
             s.update(usuario);
             t.commit();
-            mensagem = "Usuário atualizado com sucesso!";
+            variaveisGlobais.setMensagem("Usuário atualizado com sucesso!");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,9 +76,9 @@ public class UsuarioDao {
                 t.rollback();
             }
             if(ex.toString().contains("ConstraintViolationException")){
-                mensagem = "Há outro usuário cadastrado com esse nome!";
+                variaveisGlobais.setMensagem("Há outro usuário cadastrado com esse nome!");
             } else {
-                mensagem = "Erro ao atualizar usuário!";
+                variaveisGlobais.setMensagem("Erro ao atualizar usuário!");
             }
         }
         return false;
@@ -124,7 +115,7 @@ public class UsuarioDao {
                 usuario = usuarios.get(0);
                 usuario.setLogado(true);
             } else {
-                mensagem = "Nome ou senha incorreto(s)!";
+                variaveisGlobais.setMensagem("Nome ou senha incorreto(s)!");
             }
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);

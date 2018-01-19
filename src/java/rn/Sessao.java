@@ -14,9 +14,12 @@ import dao.PagamentoDao;
 import dao.ProdutoDao;
 import dao.UsuarioDao;
 import dao.VendaDao;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
@@ -32,6 +35,11 @@ public class Sessao {
         SESSOES = new ArrayList<>();
     }
 
+    public Sessao(){
+        getSessao();
+        checarLogin();
+    }
+    
     private RNVenda rnVenda;
     private String id;
     private VariaveisGlobais variaveisGlobais;
@@ -52,6 +60,18 @@ public class Sessao {
         this.variaveisGlobais = variaveisGlobais;
     }
 
+    private void checarLogin(){
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        if(!request.getContextPath().endsWith("Login.xhtml") && !variaveisGlobais.getUsuario().getLogado()){
+            try {
+                ((HttpServletResponse) facesContext.getExternalContext().getResponse()).sendRedirect("Login.xhtml");
+            } catch (IOException ex) {
+                Logger.getLogger(Sessao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     private void setIdSessao() {
         FacesContext context = FacesContext.getCurrentInstance();
         Cookie cookie = new Cookie("idSessao", id);
@@ -73,7 +93,7 @@ public class Sessao {
         return "";
     }
 
-    public void getSessao() {
+    private void getSessao() {
         String idSessao = getIdSessao();
         
         if (idSessao != null && !idSessao.isEmpty()) {
@@ -90,43 +110,9 @@ public class Sessao {
 
     private void novaSessao() {
         this.id = UUID.randomUUID().toString();
-
         variaveisGlobais = new VariaveisGlobais();
-        variaveisGlobais.setUsuario(new Usuario());
-
-        UsuarioDao usuarioDao = new UsuarioDao(variaveisGlobais);
-        usuarioDao.setUsuario(variaveisGlobais.getUsuario());
-        variaveisGlobais.setUsuarioDao(usuarioDao);
-
-        ClienteDao clienteDao = new ClienteDao(variaveisGlobais);
-        clienteDao.setCliente(new Cliente());
-        variaveisGlobais.setClienteDao(clienteDao);
-
-        ProdutoDao produtoDao = new ProdutoDao(variaveisGlobais);
-        produtoDao.setProduto(new Produto());
-        variaveisGlobais.setProdutoDao(produtoDao);
-
-        VendaDao vendaDao = new VendaDao(variaveisGlobais);
-        vendaDao.setVenda(new Venda());
-        variaveisGlobais.setVendaDao(vendaDao);
-
-        ItemVendaDao itemDao = new ItemVendaDao();
-        itemDao.setItem(new ItemVenda());
-        variaveisGlobais.setItemDao(itemDao);
-
-        PagamentoDao pagamentoDao = new PagamentoDao();
-        pagamentoDao.setPagamento(new Pagamento());
-        variaveisGlobais.setPagamentoDao(pagamentoDao);
-
-        EstoqueDao estoqueDao = new EstoqueDao(variaveisGlobais);
-        estoqueDao.setEstoque(new Estoque());
-        estoqueDao.getEstoque().setNome(variaveisGlobais.getUsuario().getEstoque());
-        variaveisGlobais.setEstoqueDao(estoqueDao);
-
         rnVenda = new RNVenda(variaveisGlobais);
-
         SESSOES.add(this);
-        
         setIdSessao();
     }
 

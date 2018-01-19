@@ -16,7 +16,6 @@ public class RNVenda {
 
     private final VariaveisGlobais variaveisGlobais;
     private Venda venda;
-    private String mensagem;
     private final Boolean checarEstoque;
     private ItemVenda item;
     private ItemVenda itemEditavel;
@@ -82,14 +81,6 @@ public class RNVenda {
         variaveisGlobais.getClienteDao().setCliente(cliente);
     }
 
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
     public void adicionarItem(Produto produto, BigDecimal quantidade) {
         for (ItemVenda iv : venda.getItens()) {
             if (iv.getProduto().equals(produto)) {
@@ -104,7 +95,7 @@ public class RNVenda {
         if (checarEstoque && !produto.getSugestao()) {
             List<Estoque> estoque = variaveisGlobais.getEstoqueDao().listar(produto);
             if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(quantidade) < 0) {
-                mensagem = "Produto sem estoque!";
+                variaveisGlobais.setMensagem("Produto sem estoque!");
                 return;
             }
         }
@@ -116,10 +107,10 @@ public class RNVenda {
         item.setQuantidade(quantidade);
 
         if (checarEstoque && !produto.getSugestao()) {
-            if (variaveisGlobais.getEstoqueDao().retirarDoEstoque(item)) {
+            if (variaveisGlobais.getEstoqueDao().retirarDoEstoque(item, venda.getEstoque())) {
                 venda.getItens().add(item);
             } else {
-                mensagem = "erro ao adicionar item de venda!";
+                variaveisGlobais.setMensagem("erro ao adicionar item de venda!");
             }
         } else {
             venda.getItens().add(item);
@@ -138,15 +129,15 @@ public class RNVenda {
             List<Estoque> estoque = variaveisGlobais.getEstoqueDao().listar(itemEditavel.getProduto());
             if (estoque.isEmpty() || estoque.get(0).getQuantidade().compareTo(diferencaQuantidade) < 0) {
                 itemEditavel.setQuantidade(item.getQuantidade());
-                mensagem = "Produto sem estoque!";
+                variaveisGlobais.setMensagem("Produto sem estoque!");
             } else {
                 BigDecimal quantidade = itemEditavel.getQuantidade();
                 itemEditavel.setQuantidade(diferencaQuantidade.negate());
-                if (variaveisGlobais.getEstoqueDao().adicionarAoEstoque(itemEditavel)) {
+                if (variaveisGlobais.getEstoqueDao().adicionarAoEstoque(itemEditavel, venda.getEstoque())) {
                     itemEditavel.setQuantidade(quantidade);
                 } else {
                     itemEditavel.setQuantidade(item.getQuantidade());
-                    mensagem = "Erro ao editar item de venda!";
+                    variaveisGlobais.setMensagem("Erro ao editar item de venda!");
                 }
             }
         }
@@ -162,10 +153,10 @@ public class RNVenda {
 
     public void retirarItem(ItemVenda item) {
         if (checarEstoque && !item.getProduto().getSugestao()) {
-            if (variaveisGlobais.getEstoqueDao().adicionarAoEstoque(item)) {
+            if (variaveisGlobais.getEstoqueDao().adicionarAoEstoque(item, venda.getEstoque())) {
                 venda.getItens().remove(item);
             } else {
-                mensagem = "Erro ao retirar item de venda!";
+                variaveisGlobais.setMensagem("Erro ao retirar item de venda!");
             }
         } else {
             venda.getItens().remove(item);
@@ -186,7 +177,7 @@ public class RNVenda {
 
     public void adicionarPagamento(Pagamento pagamento) {
         if (venda.getValorNaoPago().compareTo(pagamento.getValor()) < 0) {
-            mensagem = "Valor desse pagamento é maior que o valor não pago!";
+            variaveisGlobais.setMensagem("Valor desse pagamento é maior que o valor não pago!");
             return;
         }
         pagamento.setTipo(StringUtils.padronizar(pagamento.getTipo()));
@@ -200,7 +191,7 @@ public class RNVenda {
     public void cancelarVenda() {
         for (ItemVenda iv : venda.getItens()) {
             if (checarEstoque && !iv.getProduto().getSugestao()) {
-                while (!variaveisGlobais.getEstoqueDao().adicionarAoEstoque(iv)) {
+                while (!variaveisGlobais.getEstoqueDao().adicionarAoEstoque(iv, venda.getEstoque())) {
                 }
             }
         }
@@ -208,17 +199,17 @@ public class RNVenda {
 
     public void finalizarVenda() {
         if(variaveisGlobais.getUsuario().getPorcentagemDesconto().compareTo(venda.getPorcentagemDesconto()) < 0){
-            mensagem = "Usuário não tem permissão para dar essa porcentagem de desconto na venda!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para dar essa porcentagem de desconto na venda!");
             return;
         }
         
         if (editandoVenda && !Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.EDITAR_VENDA)) {
-            mensagem = "Usuário não tem permissão para editar venda!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para editar venda!");
             return;
         }
 
         if (venda.getValorNaoPago().compareTo(BigDecimal.ZERO) > 0 && (cliente.getLimiteDebto() == null || cliente.getLimiteDebto().compareTo(variaveisGlobais.getClienteDao().debto().add(venda.getValorNaoPago())) < 0)) {
-            mensagem = "A venda não foi paga e o cliente não tem limite de debto disponível!";
+            variaveisGlobais.setMensagem("A venda não foi paga e o cliente não tem limite de debto disponível!");
             return;
         }
         
@@ -232,7 +223,7 @@ public class RNVenda {
     private void inserirVenda() {
         variaveisGlobais.getVendaDao().setVenda(venda);
         if (!variaveisGlobais.getVendaDao().inserir()) {
-            mensagem = "Erro ao inserir venda!";
+            variaveisGlobais.setMensagem("Erro ao inserir venda!");
             return;
         }
         for (Pagamento pgmt : venda.getPagamentos()) {
@@ -250,7 +241,7 @@ public class RNVenda {
     private void atualizarVenda() {
         variaveisGlobais.getVendaDao().setVenda(venda);
         if (!variaveisGlobais.getVendaDao().atualizar()) {
-            mensagem = "Erro ao atualizar venda!";
+            variaveisGlobais.setMensagem("Erro ao atualizar venda!");
             return;
         }
         for (Pagamento pgmt : venda.getPagamentos()) {

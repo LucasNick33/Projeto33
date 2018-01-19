@@ -17,7 +17,6 @@ public class ProdutoDao {
 
     private final VariaveisGlobais variaveisGlobais;
     private Produto produto;
-    private String mensagem;
 
     public ProdutoDao(VariaveisGlobais variaveisGlobais){
         this.variaveisGlobais = variaveisGlobais;
@@ -31,17 +30,9 @@ public class ProdutoDao {
         this.produto = produto;
     }
 
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
     public Boolean inserir() {
         if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_PRODUTO)){
-            mensagem = "Usuário não tem permissão para cadastro de produto!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de produto!");
             return false;
         }
         produto.setId(Calendar.getInstance().getTimeInMillis());
@@ -54,16 +45,16 @@ public class ProdutoDao {
             t = s.beginTransaction();
             s.save(produto);
             t.commit();
-            mensagem = "Produto cadastrado com sucesso!";
+            variaveisGlobais.setMensagem("Produto cadastrado com sucesso!");
             return true;
         } catch (Exception ex) {
             if (t != null) {
                 t.rollback();
             }
             if (ex.toString().contains("ConstraintViolationException")) {
-                mensagem = "Há outro produto cadastrado com esse nome e marca ou código!";
+                variaveisGlobais.setMensagem("Há outro produto cadastrado com esse nome e marca ou código!");
             } else {
-                mensagem = "Erro ao cadastrar produto!";
+                variaveisGlobais.setMensagem("Erro ao cadastrar produto!");
             }
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -72,7 +63,7 @@ public class ProdutoDao {
 
     public Boolean atualizar() {
         if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_PRODUTO)){
-            mensagem = "Usuário não tem permissão para cadastro de produto!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de produto!");
             return false;
         }
         produto.setNome(StringUtils.padronizar(produto.getNome()));
@@ -84,16 +75,16 @@ public class ProdutoDao {
             t = s.beginTransaction();
             s.update(produto);
             t.commit();
-            mensagem = "Produto atualizado com sucesso!";
+            variaveisGlobais.setMensagem("Produto atualizado com sucesso!");
             return true;
         } catch (Exception ex) {
             if (t != null) {
                 t.rollback();
             }
             if (ex.toString().contains("ConstraintViolationException")) {
-                mensagem = "Há outro produto cadastrado com esse nome e marca ou código!";
+                variaveisGlobais.setMensagem("Há outro produto cadastrado com esse nome e marca ou código!");
             } else {
-                mensagem = "Erro ao atualizado produto!";
+                variaveisGlobais.setMensagem("Erro ao atualizado produto!");
             }
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }

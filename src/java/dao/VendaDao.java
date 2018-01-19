@@ -16,7 +16,6 @@ public class VendaDao {
 
     private final VariaveisGlobais variaveisGlobais;
     private Venda venda;
-    private String mensagem;
     private Timestamp dataInicial;
     private Timestamp dataFinal;
 
@@ -48,14 +47,6 @@ public class VendaDao {
         this.dataFinal = dataFinal;
     }
 
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
     public Boolean inserir() {
         Session s = BaseDao.getConexao();
         Transaction t = null;
@@ -63,21 +54,21 @@ public class VendaDao {
             t = s.beginTransaction();
             s.save(venda);
             t.commit();
-            mensagem = "Venda inserida com sucesso!";
+            variaveisGlobais.setMensagem("Venda inserida com sucesso!");
             return false;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             if (t != null) {
                 t.rollback();
             }
-            mensagem = "Erro ao inserir venda!";
+            variaveisGlobais.setMensagem("Erro ao inserir venda!");
         }
         return true;
     }
 
     public Boolean atualizar() {
         if (Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.EDITAR_VENDA)) {
-            mensagem = "Usuário não tem permissão para editar venda!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para editar venda!");
             return false;
         }
         Session s = BaseDao.getConexao();
@@ -86,14 +77,14 @@ public class VendaDao {
             t = s.beginTransaction();
             s.update(venda);
             t.commit();
-            mensagem = "Venda atualizada com sucesso!";
+            variaveisGlobais.setMensagem("Venda atualizada com sucesso!");
             return false;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             if (t != null) {
                 t.rollback();
             }
-            mensagem = "Erro ao atualizar venda!";
+            variaveisGlobais.setMensagem("Erro ao atualizar venda!");
         }
         return true;
     }

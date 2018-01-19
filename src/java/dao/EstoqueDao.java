@@ -3,7 +3,6 @@ package dao;
 import beans.Estoque;
 import beans.ItemVenda;
 import beans.Produto;
-import beans.Usuario;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -19,7 +18,6 @@ public class EstoqueDao {
 
     private final VariaveisGlobais variaveisGlobais;
     private Estoque estoque;
-    private String mensagem;
 
     public EstoqueDao(VariaveisGlobais variaveisGlobais) {
         this.variaveisGlobais = variaveisGlobais;
@@ -33,14 +31,6 @@ public class EstoqueDao {
         this.estoque = estoque;
     }
 
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
     public Boolean inserir(Produto produto) {
         estoque.setId(Calendar.getInstance().getTimeInMillis());
         estoque.setIdProduto(produto.getId());
@@ -51,7 +41,7 @@ public class EstoqueDao {
             t = s.beginTransaction();
             s.save(estoque);
             t.commit();
-            mensagem = "Estoque registrado com sucesso!";
+            variaveisGlobais.setMensagem("Estoque registrado com sucesso!");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -59,9 +49,9 @@ public class EstoqueDao {
                 t.rollback();
             }
             if (ex.toString().contains("ConstraintViolationException")) {
-                mensagem = "Esse produto já possui registro pra esse estoque!";
+                variaveisGlobais.setMensagem("Esse produto já possui registro pra esse estoque!");
             } else {
-                mensagem = "Erro ao registrar estoque!";
+                variaveisGlobais.setMensagem("Erro ao registrar estoque!");
             }
         }
         return false;
@@ -75,7 +65,7 @@ public class EstoqueDao {
             t = s.beginTransaction();
             s.update(estoque);
             t.commit();
-            mensagem = "Estoque atualizado com sucesso!";
+            variaveisGlobais.setMensagem("Estoque atualizado com sucesso!");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,9 +73,9 @@ public class EstoqueDao {
                 t.rollback();
             }
             if (ex.toString().contains("ConstraintViolationException")) {
-                mensagem = "Esse produto já possui registro pra esse estoque!";
+                variaveisGlobais.setMensagem("Esse produto já possui registro pra esse estoque!");
             } else {
-                mensagem = "Erro ao atualizar estoque!";
+                variaveisGlobais.setMensagem("Erro ao atualizar estoque!");
             }
         }
         return false;
@@ -98,14 +88,14 @@ public class EstoqueDao {
             t = s.beginTransaction();
             s.delete(estoque);
             t.commit();
-            mensagem = "Estoque excluído com sucesso!";
+            variaveisGlobais.setMensagem("Estoque excluído com sucesso!");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             if (t != null) {
                 t.rollback();
             }
-            mensagem = "Erro ao excluir estoque!";
+            variaveisGlobais.setMensagem("Erro ao excluir estoque!");
         }
         return false;
     }
@@ -136,7 +126,7 @@ public class EstoqueDao {
         return estoques;
     }
 
-    public Boolean retirarDoEstoque(ItemVenda item) {
+    public Boolean retirarDoEstoque(ItemVenda item, String estoque) {
         Session s = BaseDao.getConexao();
         Transaction t = null;
         try {
@@ -144,7 +134,7 @@ public class EstoqueDao {
             Query query = s.createQuery("UPDATE Estoque SET quantidade = (quantidade - ?) WHERE idProduto = ? AND nome = ?");
             query.setParameter(0, item.getQuantidade());
             query.setParameter(1, item.getIdProduto());
-            query.setParameter(2, variaveisGlobais.getUsuario().getEstoque());
+            query.setParameter(2, estoque);
             query.executeUpdate();
             t.commit();
             return true;
@@ -157,7 +147,7 @@ public class EstoqueDao {
         return false;
     }
 
-    public Boolean adicionarAoEstoque(ItemVenda item) {
+    public Boolean adicionarAoEstoque(ItemVenda item, String estoque) {
         Session s = BaseDao.getConexao();
         Transaction t = null;
         try {
@@ -165,7 +155,7 @@ public class EstoqueDao {
             Query query = s.createQuery("UPDATE Estoque SET quantidade = (quantidade + ?) WHERE idProduto = ? AND nome = ?");
             query.setParameter(0, item.getQuantidade());
             query.setParameter(1, item.getIdProduto());
-            query.setParameter(2, variaveisGlobais.getUsuario().getEstoque());
+            query.setParameter(2, estoque);
             query.executeUpdate();
             t.commit();
             return true;

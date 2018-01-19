@@ -19,7 +19,6 @@ public class ClienteDao {
     
     private final VariaveisGlobais variaveisGlobais;
     private Cliente cliente;
-    private String mensagem;
 
     public ClienteDao(VariaveisGlobais variaveisGlobais){
         this.variaveisGlobais = variaveisGlobais;
@@ -32,18 +31,10 @@ public class ClienteDao {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
     
     public Boolean inserir() {
         if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_CLIENTE)){
-            mensagem = "Usuário não tem permissão para cadastro de cliente!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de cliente!");
             return false;
         }
         cliente.setId(Calendar.getInstance().getTimeInMillis());
@@ -53,7 +44,7 @@ public class ClienteDao {
             t = s.beginTransaction();
             s.save(cliente);
             t.commit();
-            mensagem = "Cliente cadastrado com sucesso!";
+            variaveisGlobais.setMensagem("Cliente cadastrado com sucesso!");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,9 +52,9 @@ public class ClienteDao {
                 t.rollback();
             }
             if(ex.toString().contains("ConstraintViolationException")){
-                mensagem = "Há outro cliente cadastrado com esse nome!";
+                variaveisGlobais.setMensagem("Há outro cliente cadastrado com esse nome!");
             } else {
-                mensagem = "Erro ao cadastrar cliente!";
+                variaveisGlobais.setMensagem("Erro ao cadastrar cliente!");
             }
         }
         return false;
@@ -71,7 +62,7 @@ public class ClienteDao {
 
     public Boolean atualizar() {
         if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_CLIENTE)){
-            mensagem = "Usuário não tem permissão para cadastro de cliente!";
+            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de cliente!");
             return false;
         }
         Session s = BaseDao.getConexao();
@@ -80,7 +71,7 @@ public class ClienteDao {
             t = s.beginTransaction();
             s.update(cliente);
             t.commit();
-            mensagem = "Cliente atualizado com sucesso!";
+            variaveisGlobais.setMensagem("Cliente atualizado com sucesso!");
             return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,9 +79,9 @@ public class ClienteDao {
                 t.rollback();
             }
             if(ex.toString().contains("ConstraintViolationException")){
-                mensagem = "Há outro cliente cadastrado com esse nome!";
+                variaveisGlobais.setMensagem("Há outro cliente cadastrado com esse nome!");
             } else {
-                mensagem = "Erro ao atualizar cliente!";
+                variaveisGlobais.setMensagem("Erro ao atualizar cliente!");
             }
         }
         return false;
