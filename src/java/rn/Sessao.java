@@ -14,6 +14,7 @@ import dao.PagamentoDao;
 import dao.ProdutoDao;
 import dao.UsuarioDao;
 import dao.VendaDao;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
@@ -22,6 +23,10 @@ import javax.faces.bean.ManagedBean;
 public class Sessao {
     
     private static List<Sessao> sessoes;
+    
+    static{
+        sessoes = new ArrayList<>();
+    }
     
     private UsuarioDao usuarioDao;
     private ClienteDao clienteDao;
