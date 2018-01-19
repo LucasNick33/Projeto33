@@ -37,15 +37,7 @@ public class RNVenda {
 
     public RNVenda(UsuarioDao usuarioDao, ClienteDao clienteDao, VendaDao vendaDao, ItemVendaDao itemDao, EstoqueDao estoqueDao, PagamentoDao pagamentoDao) {
         this.usuarioDao = usuarioDao;
-
-        venda = vendaDao.getVenda();
-        venda.setId(Calendar.getInstance().getTimeInMillis());
-        venda.setIdUsuario(usuarioDao.getUsuario().getId());
-        venda.setItens(new ArrayList<>());
-        venda.setPagamentos(new ArrayList<>());
-        venda.setEstoque(usuarioDao.getUsuario().getEstoque());
-        editandoVenda = false;
-
+        
         this.vendaDao = vendaDao;
 
         this.pagamentoDao = pagamentoDao;
@@ -53,14 +45,17 @@ public class RNVenda {
         this.itemDao = itemDao;
 
         this.estoqueDao = estoqueDao;
-        this.estoqueDao.setEstoque(new Estoque());
-        this.estoqueDao.getEstoque().setNome(usuarioDao.getUsuario().getEstoque());
 
         this.clienteDao = clienteDao;
-        if(this.clienteDao.getCliente() == null){
-            this.clienteDao.setCliente(new Cliente());
-        }
         cliente = this.clienteDao.getCliente();
+        
+        venda = vendaDao.getVenda();
+        venda.setId(Calendar.getInstance().getTimeInMillis());
+        venda.setIdUsuario(usuarioDao.getUsuario().getId());
+        venda.setItens(new ArrayList<>());
+        venda.setPagamentos(new ArrayList<>());
+        venda.setEstoque(usuarioDao.getUsuario().getEstoque());
+        editandoVenda = false;
 
         checarEstoque = true;
     }

@@ -2,6 +2,7 @@
 package rn;
 
 import beans.Cliente;
+import beans.Estoque;
 import beans.ItemVenda;
 import beans.Pagamento;
 import beans.Produto;
@@ -144,6 +145,10 @@ public class Sessao {
         pagamentoDao.setPagamento(new Pagamento());
         
         estoqueDao = new EstoqueDao();
+        estoqueDao.setEstoque(new Estoque());
+        estoqueDao.getEstoque().setNome(usuarioDao.getUsuario().getEstoque());
+        estoqueDao.setUsuario(usuarioDao.getUsuario());
+        
         rnVenda = new RNVenda(usuarioDao, clienteDao, vendaDao, itemDao, estoqueDao, pagamentoDao);
         
         SESSOES.add(this);
