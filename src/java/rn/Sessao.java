@@ -22,10 +22,10 @@ import javax.faces.bean.ManagedBean;
 @ManagedBean
 public class Sessao {
     
-    private static List<Sessao> sessoes;
+    private static final List<Sessao> SESSOES;
     
     static{
-        sessoes = new ArrayList<>();
+        SESSOES = new ArrayList<>();
     }
     
     private UsuarioDao usuarioDao;
@@ -110,9 +110,9 @@ public class Sessao {
         this.id = id;
     }
 
-    public void getSession(String id){
+    public void getSessao(String id){
         if(id != null && !id.isEmpty()){
-            for(Sessao s : sessoes){
+            for(Sessao s : SESSOES){
                 if(s.id.equals(id)){
                     copiar(s);
                     return;
@@ -146,7 +146,7 @@ public class Sessao {
         estoqueDao = new EstoqueDao();
         rnVenda = new RNVenda(usuarioDao, clienteDao, vendaDao, itemDao, estoqueDao, pagamentoDao);
         
-        sessoes.add(this);
+        SESSOES.add(this);
     }
     
     private void copiar(Sessao s){
