@@ -127,7 +127,7 @@ public class ItemVenda implements Serializable {
     }
     
     public BigDecimal getDesconto(){
-        return getValorItem().subtract(getTotalItem());
+        return getPorcentagemDesconto().divide(new BigDecimal(100), MathContext.DECIMAL128).multiply(getValorItem());
     }
     
     public void setDesconto(BigDecimal valor){
@@ -147,7 +147,7 @@ public class ItemVenda implements Serializable {
      * @return (preço de venda x quantidade) - desconto
      */
     public BigDecimal getTotalItem(){
-        return getValorItem().multiply(getPorcentagemDesconto().divide(new BigDecimal(100), MathContext.DECIMAL128));
+        return getValorItem().subtract(getDesconto());
     }
     
     @Override

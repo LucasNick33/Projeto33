@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+import util.DataUtils;
+import util.NumUtils;
 
 @Entity
 public class Venda implements Serializable {
@@ -129,7 +131,7 @@ public class Venda implements Serializable {
     }
 
     public BigDecimal getDesconto() {
-        return valor.subtract(getTotal());
+        return porcentagemDesconto.divide(new BigDecimal(100), MathContext.DECIMAL128).multiply(valor);
     }
 
     public void setDesconto(BigDecimal valor) {
@@ -145,7 +147,8 @@ public class Venda implements Serializable {
     }
 
     public BigDecimal getValorNaoPago() {
-        return getTotal().subtract(getValorPago());
+        BigDecimal valorNaoPago = getTotal().subtract(getValorPago());
+        return valorNaoPago.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : valorNaoPago;
     }
 
     /**
@@ -153,7 +156,12 @@ public class Venda implements Serializable {
      * @return valor da venda - desconto
      */
     public BigDecimal getTotal() {
-        return valor.multiply(porcentagemDesconto.divide(new BigDecimal(100), MathContext.DECIMAL128));
+        return valor.subtract(getDesconto());
     }
 
+    @Override
+    public String toString(){
+        return DataUtils.formataData(dataVenda) + " " + NumUtils.formataValorMonetario(valor) + " - " + NumUtils.formataValorMonetario(getDesconto()) + " = " + NumUtils.formataValorMonetario(getTotal());
+    }
+    
 }

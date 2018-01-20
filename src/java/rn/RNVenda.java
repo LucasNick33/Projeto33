@@ -22,6 +22,7 @@ public class RNVenda {
     private Pagamento pagamento;
     private Boolean editandoVenda;
     private Cliente cliente;
+    private BigDecimal troco;
 
     public RNVenda(VariaveisGlobais variaveisGlobais) {
         this.variaveisGlobais = variaveisGlobais;
@@ -37,6 +38,7 @@ public class RNVenda {
         editandoVenda = false;
 
         checarEstoque = true;
+        troco = BigDecimal.ZERO;
     }
 
     public Venda getVenda() {
@@ -79,6 +81,14 @@ public class RNVenda {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
         variaveisGlobais.getClienteDao().setCliente(cliente);
+    }
+
+    public BigDecimal getTroco() {
+        return troco;
+    }
+
+    public void setTroco(BigDecimal troco) {
+        this.troco = troco;
     }
 
     public void adicionarItem(Produto produto, BigDecimal quantidade) {
@@ -146,8 +156,8 @@ public class RNVenda {
             itemEditavel.setPorcentagemDesconto(item.getPorcentagemDesconto());
         }
 
-        ItemVenda iv = venda.getItens().get(venda.getItens().indexOf(item));
-        iv = itemEditavel;
+        int index = venda.getItens().indexOf(item);
+        venda.getItens().set(index, itemEditavel);
         calcularValorVenda();
     }
 
@@ -177,8 +187,7 @@ public class RNVenda {
 
     public void adicionarPagamento(Pagamento pagamento) {
         if (venda.getValorNaoPago().compareTo(pagamento.getValor()) < 0) {
-            variaveisGlobais.setMensagem("Valor desse pagamento é maior que o valor não pago!");
-            return;
+            troco = troco.add(pagamento.getValor().subtract(venda.getValorNaoPago()));
         }
         pagamento.setTipo(StringUtils.padronizar(pagamento.getTipo()));
         venda.getPagamentos().add(pagamento);

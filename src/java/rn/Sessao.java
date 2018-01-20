@@ -1,19 +1,5 @@
 package rn;
 
-import beans.Cliente;
-import beans.Estoque;
-import beans.ItemVenda;
-import beans.Pagamento;
-import beans.Produto;
-import beans.Usuario;
-import beans.Venda;
-import dao.ClienteDao;
-import dao.EstoqueDao;
-import dao.ItemVendaDao;
-import dao.PagamentoDao;
-import dao.ProdutoDao;
-import dao.UsuarioDao;
-import dao.VendaDao;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
