@@ -185,16 +185,20 @@ public class RNVenda {
         venda.setValor(totalItens);
     }
 
+    private void calcularTroco(){
+        troco = venda.getValorPago().subtract(venda.getTotal());
+        troco =  troco.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : troco;
+    }
+    
     public void adicionarPagamento(Pagamento pagamento) {
-        if (venda.getValorNaoPago().compareTo(pagamento.getValor()) < 0) {
-            troco = troco.add(pagamento.getValor().subtract(venda.getValorNaoPago()));
-        }
         pagamento.setTipo(StringUtils.padronizar(pagamento.getTipo()));
         venda.getPagamentos().add(pagamento);
+        calcularTroco();
     }
 
     public void retirarPagamento(Pagamento pagamento) {
         venda.getPagamentos().remove(pagamento);
+        calcularTroco();
     }
 
     public void cancelarVenda() {
