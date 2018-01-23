@@ -12,18 +12,27 @@ import javax.persistence.Transient;
 public class Usuario implements Serializable {
     
     @Id
+    @Column(name="id")
     private Long id;
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name="nome")
     private String nome;
+    @Column(name="CPF")
     private String CPF;
-    @Column(nullable = false)
+    @Column(nullable = false, name="senha")
     private String senha;
+    @Column(name="email")
     private String email;
+    @Column(name="telefone")
     private String telefone;
+    @Column(name="endereco")
     private String endereco;
+    @Column(name="data_nascimento")
     private Timestamp dataNascimento;
+    @Column(name="permissoes")
     private String permissoes;
+    @Column(name="ativo")
     private Boolean ativo;
+    @Column(name="porcentagem_desconto")
     private BigDecimal porcentagemDesconto;
     @Transient
     private String estoque;

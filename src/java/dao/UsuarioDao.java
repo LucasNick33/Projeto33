@@ -35,7 +35,7 @@ public class UsuarioDao {
             return false;
         }
         usuario.setId(Calendar.getInstance().getTimeInMillis());
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -62,7 +62,7 @@ public class UsuarioDao {
             variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
             return false;
         }
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -88,7 +88,7 @@ public class UsuarioDao {
         usuario.setNome(usuario.getNome() == null ? "" : usuario.getNome());
         String nome = "%" + usuario.getNome().trim() + "%";
         usuario.setAtivo(usuario.getAtivo() == null ? true : usuario.getAtivo());
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<Usuario> usuarios = new ArrayList<>();
         try {
             Query query = s.createQuery("FROM Usuario u WHERE u.nome like ? AND u.ativo = ? ORDER BY u.nome");
@@ -101,26 +101,24 @@ public class UsuarioDao {
         return usuarios;
     }
 
-    public Boolean login(){
-        Session s = BaseDao.getConexao();
-        boolean login = false;
-        List<Usuario> usuarios = null;
+    public void login(){
+        Session s = variaveisGlobais.getBd().getConexao();
+        List<Usuario> usuarios;
         try {
             Query query = s.createQuery("FROM Usuario u WHERE u.nome = ? and u.senha = ?");
             query.setParameter(0, usuario.getNome());
             query.setParameter(1, usuario.getSenha());
             usuarios = query.list();
             if(!usuarios.isEmpty()){
-                login = true;
-                usuario = usuarios.get(0);
-                usuario.setLogado(true);
+                variaveisGlobais.setUsuario(usuarios.get(0));
+                variaveisGlobais.getUsuario().setLogado(true);
+                variaveisGlobais.getSessao().redirectToIndex();
             } else {
                 variaveisGlobais.setMensagem("Nome ou senha incorreto(s)!");
             }
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return login;
     }
     
 }

@@ -39,7 +39,7 @@ public class ProdutoDao {
         produto.setNome(StringUtils.padronizar(produto.getNome()));
         produto.setCategoria(StringUtils.padronizar(produto.getCategoria()));
         produto.setMarca(StringUtils.padronizar(produto.getMarca()));
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -69,7 +69,7 @@ public class ProdutoDao {
         produto.setNome(StringUtils.padronizar(produto.getNome()));
         produto.setCategoria(StringUtils.padronizar(produto.getCategoria()));
         produto.setMarca(StringUtils.padronizar(produto.getMarca()));
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -92,7 +92,7 @@ public class ProdutoDao {
     }
 
     public List<Produto> listar() {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<Produto> produtos = new ArrayList<>();
         produto.setAtivo(produto.getAtivo() == null ? true : produto.getAtivo());
         try {
@@ -120,7 +120,7 @@ public class ProdutoDao {
     }
 
     public List<String> listarCategorias() {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<String> categorias = new ArrayList<>();
         try {
             Query query = s.createQuery("SELECT p.categoria FROM Produto p GROUP BY p.categoria ORDER BY p.categoria DESC");
@@ -132,7 +132,7 @@ public class ProdutoDao {
     }
 
     public List<String> listarMarcas() {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<String> marcas = new ArrayList<>();
         try {
             Query query = s.createQuery("SELECT p.marca FROM Produto p GROUP BY p.marca ORDER BY p.marca DESC");

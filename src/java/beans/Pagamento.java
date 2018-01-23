@@ -15,13 +15,17 @@ import javax.persistence.ManyToOne;
 public class Pagamento implements Serializable {
     
     @Id
+    @Column(name="id")
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Venda.class)
     private Long idVenda;
+    @Column(name="valor")
     private BigDecimal valor;
-    @Column(nullable = false)
+    @Column(nullable = false, name="tipo")
     private String tipo;
+    @Column(name="data_vencimento")
     private Timestamp dataVencimento;
+    @Column(name="pago")
     private Boolean pago;
     
     public Pagamento(){

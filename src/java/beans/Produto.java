@@ -2,7 +2,6 @@ package beans;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,18 +18,25 @@ import util.NumUtils;
 public class Produto implements Serializable {
     
     @Id
+    @Column(name="id")
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, name="nome")
     private String nome;
-    @Column(nullable = false)
+    @Column(nullable = false, name="marca")
     private String marca;
+    @Column(name="descricao")
     private String descricao;
+    @Column(name="preco_compra")
     private BigDecimal precoCompra;
+    @Column(name="preco_venda")
     private BigDecimal precoVenda;
-    @Column(nullable = false)
+    @Column(nullable = false, name="categoria")
     private String categoria;
+    @Column(name="porcentagem_desconto")
     private BigDecimal porcentagemDesconto;
+    @Column(name="sugestao")
     private Boolean sugestao;
+    @Column(name="ativo")
     private Boolean ativo;
     
     public Produto(){

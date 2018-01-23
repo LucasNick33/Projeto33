@@ -11,15 +11,23 @@ import javax.persistence.Id;
 public class Cliente implements Serializable {
     
     @Id
+    @Column(name="id")
     private Long id;
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name="nome")
     private String nome;
+    @Column(name="CPF")
     private String CPF;
+    @Column(name="email")
     private String email;
+    @Column(name="telefone")
     private String telefone;
+    @Column(name="endereco")
     private String endereco;
+    @Column(name="data_nascimento")
     private Timestamp dataNascimento;
+    @Column(name="ativo")
     private Boolean ativo;
+    @Column(name="limite_debto")
     private BigDecimal limiteDebto;
     
     public Cliente(){

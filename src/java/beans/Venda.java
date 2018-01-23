@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -18,16 +19,23 @@ import util.NumUtils;
 public class Venda implements Serializable {
 
     @Id
+    @Column(name="id")
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Usuario.class)
     private Long idUsuario;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Cliente.class)
     private Long idCliente;
+    @Column(name="valor")
     private BigDecimal valor;
+    @Column(name="data_venda")
     private Timestamp dataVenda;
+    @Column(name="porcentagem_desconto")
     private BigDecimal porcentagemDesconto;
+    @Column(name="estoque")
     private String estoque;
+    @Column(name="pago")
     private Boolean pago;
+    @Column(name="ativo")
     private Boolean ativo;
     @Transient
     private List<ItemVenda> itens;

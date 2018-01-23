@@ -9,10 +9,16 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import rn.VariaveisGlobais;
 
 public class ItemVendaDao {
     
+    private final VariaveisGlobais variaveisGlobais;
     private ItemVenda item;
+
+    public ItemVendaDao(VariaveisGlobais variaveisGlobais) {
+        this.variaveisGlobais = variaveisGlobais;
+    }
 
     public ItemVenda getItem() {
         return item;
@@ -23,7 +29,7 @@ public class ItemVendaDao {
     }
     
     public Boolean inserir(){
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try{
             t = s.beginTransaction();
@@ -40,7 +46,7 @@ public class ItemVendaDao {
     }
     
     public Boolean atualizar(){
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try{
             t = s.beginTransaction();
@@ -57,7 +63,7 @@ public class ItemVendaDao {
     }
     
     public List<ItemVenda> listar(Venda venda){
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<ItemVenda> itens = new ArrayList<>();
         try{
             Query query = s.createQuery("SELECT ItemVenda FROM ItemVenda INNER JOIN Venda v WHERE v.id = ?");

@@ -9,10 +9,16 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import rn.VariaveisGlobais;
 
 public class PagamentoDao {
     
+    private final VariaveisGlobais variaveisGlobais;
     private Pagamento pagamento;
+
+    public PagamentoDao(VariaveisGlobais variaveisGlobais) {
+        this.variaveisGlobais = variaveisGlobais;
+    }
 
     public Pagamento getPagamento() {
         return pagamento;
@@ -23,7 +29,7 @@ public class PagamentoDao {
     }
     
     public Boolean inserir(){
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try{
             t = s.beginTransaction();
@@ -40,7 +46,7 @@ public class PagamentoDao {
     }
     
     public Boolean atualizar(){
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try{
             t = s.beginTransaction();
@@ -57,7 +63,7 @@ public class PagamentoDao {
     }
     
     public List<Pagamento> listar(Venda venda){
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<Pagamento> pagamentos = new ArrayList<>();
         try{
             Query query = s.createQuery("SELECT Pagamento FROM Pagamento INNER JOIN Venda v WHERE v.id = ?");
@@ -70,7 +76,7 @@ public class PagamentoDao {
     }
     
     public List<String> listarTipos(){
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<String> pagamentos = new ArrayList<>();
         try{
             Query query = s.createQuery("SELECT p.tipo FROM Pagamento p GROUP BY p.tipo ORDER BY p.tipo");

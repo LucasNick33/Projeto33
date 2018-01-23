@@ -9,10 +9,10 @@ import org.hibernate.cfg.Configuration;
 
 public class BaseDao {
 
-    private static final SessionFactory sessionFactory;
-    private static Session sessao;
+    private SessionFactory sessionFactory;
+    private Session sessao;
 
-    static {
+    public BaseDao(){
         try {
             Configuration cfg = new Configuration().configure("hibernate.cfg.xml");
             StandardServiceRegistryBuilder sb = new StandardServiceRegistryBuilder();
@@ -24,8 +24,8 @@ public class BaseDao {
             throw new ExceptionInInitializerError(th);
         }
     }
-
-    public static Session getConexao() {
+    
+    public Session getConexao() {
         sessao = sessao == null ? sessionFactory.openSession() : sessao;
         sessao = sessao.isConnected() ? sessao : sessionFactory.openSession();
         return sessao;

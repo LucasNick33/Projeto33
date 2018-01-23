@@ -38,7 +38,7 @@ public class ClienteDao {
             return false;
         }
         cliente.setId(Calendar.getInstance().getTimeInMillis());
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -65,7 +65,7 @@ public class ClienteDao {
             variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de cliente!");
             return false;
         }
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -91,7 +91,7 @@ public class ClienteDao {
         cliente.setNome(cliente.getNome() == null ? "" : cliente.getNome());
         String nome = "%" + cliente.getNome().trim() + "%";
         cliente.setAtivo(cliente.getAtivo() == null ? true : cliente.getAtivo());
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<Usuario> clientes = new ArrayList<>();
         try {
             Query query = s.createQuery("FROM Cliente c WHERE c.nome like ? AND c.ativo = ? ORDER BY c.nome");
@@ -106,7 +106,7 @@ public class ClienteDao {
     
     public BigDecimal debto(){
         BigDecimal debto = BigDecimal.ZERO;
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         try {
             Query query = s.createQuery("SELECT SUM(p.valor) FROM Pagamento p INNER JOIN Venda v INNER JOIN Cliente c WHERE v.ativo = true AND c.id = ?");
             query.setParameter(0, cliente.getId());

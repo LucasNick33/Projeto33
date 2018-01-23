@@ -35,7 +35,7 @@ public class EstoqueDao {
         estoque.setId(Calendar.getInstance().getTimeInMillis());
         estoque.setIdProduto(produto.getId());
         estoque.setNome(StringUtils.padronizar(estoque.getNome()));
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -59,7 +59,7 @@ public class EstoqueDao {
 
     public Boolean atualizar() {
         estoque.setNome(StringUtils.padronizar(estoque.getNome()));
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -82,7 +82,7 @@ public class EstoqueDao {
     }
 
     public Boolean excluir() {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -102,7 +102,7 @@ public class EstoqueDao {
 
     public List<Estoque> listar(Produto produto) {
         estoque.setNome(StringUtils.padronizar(estoque.getNome()));
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<Estoque> estoques = new ArrayList<>();
         try {
             Query query = s.createQuery("SELECT Estoque FROM Estoque e INNER JOIN Produto p WHERE e.idProduto = ? AND e.nome like ?");
@@ -116,7 +116,7 @@ public class EstoqueDao {
     }
 
     public List<String> listarNomes() {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<String> estoques = new ArrayList<>();
         try {
             estoques = s.createQuery("SELECT nome FROM Estoque GROUP BY nome").list();
@@ -127,7 +127,7 @@ public class EstoqueDao {
     }
 
     public Boolean retirarDoEstoque(ItemVenda item, String estoque) {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -148,7 +148,7 @@ public class EstoqueDao {
     }
 
     public Boolean adicionarAoEstoque(ItemVenda item, String estoque) {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();

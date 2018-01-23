@@ -21,11 +21,11 @@ public class Sessao {
         SESSOES = new ArrayList<>();
     }
 
-    public Sessao(){
+    public Sessao() {
         getSessao();
         checarLogin();
     }
-    
+
     private RNVenda rnVenda;
     private String id;
     private VariaveisGlobais variaveisGlobais;
@@ -46,18 +46,27 @@ public class Sessao {
         this.variaveisGlobais = variaveisGlobais;
     }
 
-    private void checarLogin(){
+    private void checarLogin() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
-        if(!request.getContextPath().endsWith("Login.xhtml") && !variaveisGlobais.getUsuario().getLogado()){
+        if (!request.getRequestURI().endsWith("Login.xhtml") && !variaveisGlobais.getUsuario().getLogado()) {
             try {
-                ((HttpServletResponse) facesContext.getExternalContext().getResponse()).sendRedirect("Login.xhtml");
+                ((HttpServletResponse) facesContext.getExternalContext().getResponse()).sendRedirect("/Projeto33/Login.xhtml");
             } catch (IOException ex) {
                 Logger.getLogger(Sessao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
-    
+
+    public void redirectToIndex() {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        try {
+            ((HttpServletResponse) facesContext.getExternalContext().getResponse()).sendRedirect("/Projeto33/index.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(Sessao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private void setIdSessao() {
         FacesContext context = FacesContext.getCurrentInstance();
         Cookie cookie = new Cookie("idSessao", id);
@@ -81,7 +90,7 @@ public class Sessao {
 
     private void getSessao() {
         String idSessao = getIdSessao();
-        
+
         if (idSessao != null && !idSessao.isEmpty()) {
             for (Sessao s : SESSOES) {
                 if (s.id.equals(idSessao)) {
@@ -90,13 +99,13 @@ public class Sessao {
                 }
             }
         }
-        
+
         novaSessao();
     }
 
     private void novaSessao() {
         this.id = UUID.randomUUID().toString();
-        variaveisGlobais = new VariaveisGlobais();
+        variaveisGlobais = new VariaveisGlobais(this);
         rnVenda = new RNVenda(variaveisGlobais);
         SESSOES.add(this);
         setIdSessao();

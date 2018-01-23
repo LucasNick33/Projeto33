@@ -7,6 +7,7 @@ import beans.Pagamento;
 import beans.Produto;
 import beans.Usuario;
 import beans.Venda;
+import dao.BaseDao;
 import dao.ClienteDao;
 import dao.EstoqueDao;
 import dao.ItemVendaDao;
@@ -17,6 +18,8 @@ import dao.VendaDao;
 
 public class VariaveisGlobais {
     
+    private Sessao sessao;
+    private BaseDao bd;
     private Usuario usuario;
     private UsuarioDao usuarioDao;
     private ClienteDao clienteDao;
@@ -27,11 +30,14 @@ public class VariaveisGlobais {
     private EstoqueDao estoqueDao;
     private String mensagem;
 
-    public VariaveisGlobais(){
+    public VariaveisGlobais(Sessao sessao){
+        this.sessao = sessao;
         newVariaveisGlobais();
     }
     
     private void newVariaveisGlobais(){
+        bd = new BaseDao();
+        
         usuario = new Usuario();
 
         usuarioDao = new UsuarioDao(this);
@@ -46,15 +52,31 @@ public class VariaveisGlobais {
         vendaDao = new VendaDao(this);
         vendaDao.setVenda(new Venda());
 
-        itemDao = new ItemVendaDao();
+        itemDao = new ItemVendaDao(this);
         itemDao.setItem(new ItemVenda());
 
-        pagamentoDao = new PagamentoDao();
+        pagamentoDao = new PagamentoDao(this);
         pagamentoDao.setPagamento(new Pagamento());
 
         estoqueDao = new EstoqueDao(this);
         estoqueDao.setEstoque(new Estoque());
         estoqueDao.getEstoque().setNome(usuario.getEstoque());
+    }
+
+    public Sessao getSessao() {
+        return sessao;
+    }
+
+    public void setSessao(Sessao sessao) {
+        this.sessao = sessao;
+    }
+
+    public BaseDao getBd() {
+        return bd;
+    }
+
+    public void setBd(BaseDao bd) {
+        this.bd = bd;
     }
     
     public Usuario getUsuario() {

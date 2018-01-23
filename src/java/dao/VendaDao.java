@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import rn.Permissao;
 import rn.VariaveisGlobais;
 
 public class VendaDao {
@@ -48,7 +47,7 @@ public class VendaDao {
     }
 
     public Boolean inserir() {
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -67,11 +66,7 @@ public class VendaDao {
     }
 
     public Boolean atualizar() {
-        if (Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.EDITAR_VENDA)) {
-            variaveisGlobais.setMensagem("Usuário não tem permissão para editar venda!");
-            return false;
-        }
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
             t = s.beginTransaction();
@@ -94,11 +89,11 @@ public class VendaDao {
         dataFinal = dataFinal == null ? new Timestamp(Long.MAX_VALUE) : dataFinal;
         venda.setAtivo(venda.getAtivo() == null ? true : venda.getAtivo());
         venda.setPago(venda.getPago() == null ? false : venda.getPago());
-        Session s = BaseDao.getConexao();
+        Session s = variaveisGlobais.getBd().getConexao();
         List<Venda> vendas = new ArrayList<>();
         try {
             Query query;
-            if (venda.getIdCliente() != null && venda.getIdUsuario() != null && dataInicial != null && dataFinal != null) {
+            if (venda.getIdCliente() != null && venda.getIdUsuario() != null) {
                 query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idCliente = ? AND v.idUsuario = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? AND v.pago = ? ORDER BY v.dataVenda, v.valor");
                 query.setParameter(0, venda.getIdCliente());
                 query.setParameter(1, venda.getIdUsuario());
@@ -106,14 +101,14 @@ public class VendaDao {
                 query.setParameter(3, dataFinal);
                 query.setParameter(4, venda.getAtivo());
                 query.setParameter(5, venda.getPago());
-            } else if (venda.getIdCliente() != null && dataInicial != null && dataFinal != null) {
+            } else if (venda.getIdCliente() != null) {
                 query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idCliente = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? AND v.pago = ? ORDER BY v.dataVenda, v.valor");
                 query.setParameter(0, venda.getIdCliente());
                 query.setParameter(1, dataInicial);
                 query.setParameter(2, dataFinal);
                 query.setParameter(3, venda.getAtivo());
                 query.setParameter(4, venda.getPago());
-            } else if (venda.getIdUsuario() != null && dataInicial != null && dataFinal != null) {
+            } else if (venda.getIdUsuario() != null) {
                 query = s.createQuery("SELECT Venda FROM Venda v WHERE v.idUsuario = ? AND v.dataVenda BETWEEN ? AND ? AND v.ativo = ? AND v.pago = ? ORDER BY v.dataVenda, v.valor");
                 query.setParameter(0, venda.getIdUsuario());
                 query.setParameter(1, dataInicial);

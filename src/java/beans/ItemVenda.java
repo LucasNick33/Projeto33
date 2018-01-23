@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Objects;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -15,15 +16,21 @@ import util.NumUtils;
 public class ItemVenda implements Serializable {
     
     @Id
+    @Column(name="id")
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Produto.class)
     private Long idProduto;
     @ManyToOne(cascade = CascadeType.ALL, targetEntity = Venda.class)
     private Long idVenda;
+    @Column(name="preco_compra")
     private BigDecimal precoCompra;
+    @Column(name="preco_venda")
     private BigDecimal precoVenda;
+    @Column(name="quantidade")
     private BigDecimal quantidade;
+    @Column(name="porcentagem_desconto")
     private BigDecimal porcentagemDesconto;
+    @Column(name="sugestao")
     private Boolean sugestao;
     @Transient
     private Produto produto;
