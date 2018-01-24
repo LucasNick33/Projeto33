@@ -1,0 +1,13 @@
+/* Fonts */
+@font-face {
+  font-family: 'Poppins-Light';
+  src: url('../fonts/Poppins-Light.ttf');
+}
+@font-face {
+  font-family: 'Poppins-SemiBold';
+  src: url('../fonts/Poppins-SemiBold.ttf');
+}
+/* Login*/
+.btn-entrar{
+    width: 100%;
+}
