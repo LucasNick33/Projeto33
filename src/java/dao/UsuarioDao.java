@@ -101,7 +101,7 @@ public class UsuarioDao {
         return usuarios;
     }
 
-    public Boolean login(){
+    public String login(){
         Session s = variaveisGlobais.getBd().getConexao();
         List<Usuario> usuarios;
         try {
@@ -112,15 +112,14 @@ public class UsuarioDao {
             if(!usuarios.isEmpty()){
                 variaveisGlobais.setUsuario(usuarios.get(0));
                 variaveisGlobais.getUsuario().setLogado(true);
-                //variaveisGlobais.getSessao().redirectToIndex();
-                return true;
+                return "index.xhtml";
             } else {
                 variaveisGlobais.setMensagem("Nome ou senha incorreto(s)!");
             }
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;
+        return "";
     }
     
 }

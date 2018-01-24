@@ -73,15 +73,6 @@ public class Sessao {
         }
     }
 
-    public void redirectToIndex() {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        try {
-            ((HttpServletResponse) facesContext.getExternalContext().getResponse()).sendRedirect("/Projeto33/index.xhtml");
-        } catch (IOException ex) {
-            Logger.getLogger(Sessao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     private void setIdSessao() {
         FacesContext context = FacesContext.getCurrentInstance();
         Cookie cookie = new Cookie("idSessao", id);

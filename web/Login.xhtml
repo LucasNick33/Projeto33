@@ -45,11 +45,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <button class="btn btn-primary btn-entrar" value="Logar"
-                                    jsf:action="#{sessao.variaveisGlobais.usuarioDao.login()}">Entrar
-                                <f:ajax execute="@form" render="@form" />
-                            </button>  
-                        </div>    
+                            <h:commandButton class="btn btn-primary btn-entrar" value="Entrar" action="#{sessao.variaveisGlobais.usuarioDao.login()}"/>
+                        </div>
                     </div>                
                 </div>
             </div>
