@@ -2,7 +2,9 @@ package rn;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,12 +18,15 @@ import javax.servlet.http.HttpServletResponse;
 public class Sessao {
 
     private static final List<Sessao> SESSOES;
+    private static final Integer TEMPO_SESSAO;
 
     static {
         SESSOES = new ArrayList<>();
+        TEMPO_SESSAO = 300;
     }
 
     public Sessao() {
+        limparSessoes();
         getSessao();
         checarLogin();
     }
@@ -29,6 +34,7 @@ public class Sessao {
     private RNVenda rnVenda;
     private String id;
     private VariaveisGlobais variaveisGlobais;
+    private Long tempoPersistencia;
 
     public RNVenda getRnVenda() {
         return rnVenda;
@@ -46,6 +52,15 @@ public class Sessao {
         this.variaveisGlobais = variaveisGlobais;
     }
 
+    private void limparSessoes(){
+        long time = Calendar.getInstance().getTimeInMillis();
+        for(Sessao s : SESSOES){
+            if(s.tempoPersistencia + TEMPO_SESSAO * 1000 < time){
+                SESSOES.remove(s);
+            }
+        }
+    }
+    
     private void checarLogin() {
         FacesContext facesContext = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
@@ -70,7 +85,8 @@ public class Sessao {
     private void setIdSessao() {
         FacesContext context = FacesContext.getCurrentInstance();
         Cookie cookie = new Cookie("idSessao", id);
-        cookie.setMaxAge(3600);
+        cookie.setMaxAge(TEMPO_SESSAO);
+        tempoPersistencia = Calendar.getInstance().getTimeInMillis();
         ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(cookie);
     }
 
@@ -115,6 +131,25 @@ public class Sessao {
         this.id = s.id;
         this.variaveisGlobais = s.variaveisGlobais;
         this.rnVenda = s.rnVenda;
+        s.tempoPersistencia = Calendar.getInstance().getTimeInMillis();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Sessao other = (Sessao) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
     }
 
 }
