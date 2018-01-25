@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+ 
+    <h:head>
+        <f:facet name="first">
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+            
+            <title>Cadastro de Usuário</title>
+            <h:outputStylesheet name="bootstrap/css/bootstrap.css" />
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" />
+            <h:outputScript name="bootstrap/js/bootstrap.js" />
+        </f:facet>
+    </h:head>
+<h:body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="container" style="margin-top: 50px;">
+				<div class="row">
+					 <h:form>
+						<div class="row">
+							<!-- nome -->
+							<div class="col-lg-6 col-md-4 col-sm-4 col-xs-6 form-group">	
+						        <label for="nome">Nome:</label>
+						        <input type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.nome}" style="width: 100%;"/>
+						    </div>
+						    <!-- senha-->
+						    <div class="col-lg-6 col-md-8 col-sm-8 col-xs-6">
+						        <label for="cpf">Senha:</label>
+						        <input type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.senha}" style="width: 100%;"/>
+						    </div>    
+					    </div>
+					    <div class="row">
+					    	<!-- nome -->
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-6 form-group">	
+						        <label for="nome">Data de Nascimento:</label>
+						        <input type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.dataNascimento}" style="width: 100%;"/>
+						    </div>
+						    <!-- cpf -->
+						    <div class="col-lg-4 col-md-8 col-sm-8 col-xs-6">
+						        <label for="cpf">CPF:</label>
+						        <input type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.CPF}" style="width: 100%;"/>
+						    </div>
+						    <!-- telefone -->
+						    <div class="col-lg-4 col-md-8 col-sm-8 col-xs-6">
+						        <label for="cpf">Telefone:</label>
+						        <input type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.telefone}" style="width: 100%;"/>
+						    </div>
+					    </div>
+					    <div class="row">
+					    	<!-- email -->
+							<div class="col-lg-4 col-md-4 col-sm-4 col-xs-6 form-group">	
+						        <label for="nome">E-mail:</label>
+						        <input type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.email}" style="width: 100%;"/>
+						    </div>
+						    <!-- cpf -->
+						    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+						        <label for="cpf">Endereço:</label>
+						        <input type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.endereco}" style="width: 100%;"/>
+						    </div>
+					    </div>	
+					    <div class="col-lg-3">
+						    <div class="row">
+	                            <h:commandButton class="btn btn-primary btn-entrar" value="Salvar" action=""/>Salvar</h:commandButton>
+	                        </div>
+	                    </div>    				
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</div>
+</h:body>
+</html>
