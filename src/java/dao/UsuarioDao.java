@@ -29,11 +29,11 @@ public class UsuarioDao {
         this.usuario = usuario;
     }
 
-    public Boolean inserir() {
-        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
-            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
-            return false;
-        }
+    public void inserir() {
+//        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
+//            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
+//            return;
+//        }
         usuario.setId(Calendar.getInstance().getTimeInMillis());
         Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
@@ -42,7 +42,6 @@ public class UsuarioDao {
             s.save(usuario);
             t.commit();
             variaveisGlobais.setMensagem("Usuário cadastrado com sucesso!");
-            return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             if (t != null) {
@@ -54,14 +53,13 @@ public class UsuarioDao {
                 variaveisGlobais.setMensagem("Erro ao cadastrar usuário!");
             }
         }
-        return false;
     }
 
-    public Boolean atualizar() {
-        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
-            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
-            return false;
-        }
+    public void atualizar() {
+//        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
+//            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
+//            return;
+//        }
         Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
@@ -69,7 +67,6 @@ public class UsuarioDao {
             s.update(usuario);
             t.commit();
             variaveisGlobais.setMensagem("Usuário atualizado com sucesso!");
-            return true;
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
             if (t != null) {
@@ -81,7 +78,6 @@ public class UsuarioDao {
                 variaveisGlobais.setMensagem("Erro ao atualizar usuário!");
             }
         }
-        return false;
     }
 
     public List<Usuario> listar() {
@@ -110,6 +106,7 @@ public class UsuarioDao {
             query.setParameter(1, usuario.getSenha());
             usuarios = query.list();
             if(!usuarios.isEmpty()){
+                usuario = new Usuario();
                 variaveisGlobais.setUsuario(usuarios.get(0));
                 variaveisGlobais.getUsuario().setLogado(true);
                 return "index.xhtml";

@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import util.DataUtils;
 
 @Entity
 public class Usuario implements Serializable {
@@ -28,6 +29,8 @@ public class Usuario implements Serializable {
     private String endereco;
     @Column(name="data_nascimento")
     private Timestamp dataNascimento;
+    @Transient
+    private String nascimento;
     @Column(name="permissoes")
     private String permissoes;
     @Column(name="ativo")
@@ -114,6 +117,14 @@ public class Usuario implements Serializable {
         this.dataNascimento = dataNascimento;
     }
 
+    public String getNascimento() {
+        return DataUtils.deTimestampSemHorario(dataNascimento);
+    }
+
+    public void setNascimento(String nascimento) {
+        this.dataNascimento = DataUtils.paraTimestampSemHorario(nascimento);
+    }
+
     public String getPermissoes() {
         return permissoes;
     }
@@ -154,4 +165,9 @@ public class Usuario implements Serializable {
         this.logado = logado;
     }
 
+    @Override
+    public String toString(){
+        return getNome();
+    }
+    
 }

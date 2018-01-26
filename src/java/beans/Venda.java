@@ -169,7 +169,7 @@ public class Venda implements Serializable {
 
     @Override
     public String toString(){
-        return DataUtils.formataData(dataVenda) + " " + NumUtils.formataValorMonetario(valor) + " - " + NumUtils.formataValorMonetario(getDesconto()) + " = " + NumUtils.formataValorMonetario(getTotal());
+        return DataUtils.deTimestamp(dataVenda) + " " + NumUtils.formataValorMonetario(valor) + " - " + NumUtils.formataValorMonetario(getDesconto()) + " = " + NumUtils.formataValorMonetario(getTotal());
     }
     
 }
