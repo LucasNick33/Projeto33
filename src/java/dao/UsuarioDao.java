@@ -34,6 +34,7 @@ public class UsuarioDao {
 //            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
 //            return;
 //        }
+        usuario.permissoesToString();
         usuario.setId(Calendar.getInstance().getTimeInMillis());
         Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
@@ -60,6 +61,7 @@ public class UsuarioDao {
 //            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
 //            return;
 //        }
+        usuario.permissoesToString();
         Session s = variaveisGlobais.getBd().getConexao();
         Transaction t = null;
         try {
@@ -94,6 +96,9 @@ public class UsuarioDao {
         } catch (Exception ex) {
             Logger.getLogger(UsuarioDao.class.getName()).log(Level.SEVERE, null, ex);
         }
+        for (Usuario usr : usuarios) {
+            usr.permissoesFromString();
+        }
         return usuarios;
     }
 
@@ -109,6 +114,7 @@ public class UsuarioDao {
                 usuario = new Usuario();
                 variaveisGlobais.setUsuario(usuarios.get(0));
                 variaveisGlobais.getUsuario().setLogado(true);
+                variaveisGlobais.getUsuario().permissoesFromString();
                 return "index.xhtml";
             } else {
                 variaveisGlobais.setMensagem("Nome ou senha incorreto(s)!");

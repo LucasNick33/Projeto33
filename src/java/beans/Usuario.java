@@ -150,7 +150,6 @@ public class Usuario implements Serializable {
     }
 
     public String getPermissoes() {
-        permissoesToString();
         return permissoes;
     }
 
@@ -213,63 +212,51 @@ public class Usuario implements Serializable {
     }
     
     public Boolean getCadastroCliente() {
-        permissoesFromString();
         return cadastroCliente;
     }
 
     public void setCadastroCliente(Boolean cadastroCliente) {
         this.cadastroCliente = cadastroCliente;
-        permissoesToString();
     }
 
     public Boolean getCadastroEstoque() {
-        permissoesFromString();
         return cadastroEstoque;
     }
 
     public void setCadastroEstoque(Boolean cadastroEstoque) {
         this.cadastroEstoque = cadastroEstoque;
-        permissoesToString();
     }
 
     public Boolean getCadastroProduto() {
-        permissoesFromString();
         return cadastroProduto;
     }
 
     public void setCadastroProduto(Boolean cadastroProduto) {
         this.cadastroProduto = cadastroProduto;
-        permissoesToString();
     }
 
     public Boolean getCadastroUsuario() {
-        permissoesFromString();
         return cadastroUsuario;
     }
 
     public void setCadastroUsuario(Boolean cadastroUsuario) {
         this.cadastroUsuario = cadastroUsuario;
-        permissoesToString();
     }
 
     public Boolean getConfiguracoes() {
-        permissoesFromString();
         return configuracoes;
     }
 
     public void setConfiguracoes(Boolean configuracoes) {
         this.configuracoes = configuracoes;
-        permissoesToString();
     }
 
     public Boolean getDescontoItem() {
-        permissoesFromString();
         return descontoItem;
     }
 
     public void setDescontoItem(Boolean descontoItem) {
         this.descontoItem = descontoItem;
-        permissoesToString();
     }
 
     public Boolean getEditarVenda() {
