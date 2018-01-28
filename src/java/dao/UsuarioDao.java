@@ -16,9 +16,11 @@ public class UsuarioDao {
 
     private final VariaveisGlobais variaveisGlobais;
     private Usuario usuario;
+    private List<Usuario> usuarios;
 
     public UsuarioDao(VariaveisGlobais variaveisGlobais){
         this.variaveisGlobais = variaveisGlobais;
+        this.usuarios = new ArrayList<>();
     }
     
     public Usuario getUsuario() {
@@ -29,6 +31,10 @@ public class UsuarioDao {
         this.usuario = usuario;
     }
 
+    public void setUsuarioDaLista(int index){
+        usuario = usuarios.get(index);
+    }
+    
     public void inserir() {
 //        if(Permissao.temPermissao(variaveisGlobais.getUsuario().getPermissoes(), Permissao.CADASTRO_USUARIO)){
 //            variaveisGlobais.setMensagem("Usuário não tem permissão para cadastro de usuário!");
@@ -87,7 +93,6 @@ public class UsuarioDao {
         String nome = "%" + usuario.getNome().trim() + "%";
         usuario.setAtivo(usuario.getAtivo() == null ? true : usuario.getAtivo());
         Session s = variaveisGlobais.getBd().getConexao();
-        List<Usuario> usuarios = new ArrayList<>();
         try {
             Query query = s.createQuery("FROM Usuario u WHERE u.nome like ? AND u.ativo = ? ORDER BY u.nome");
             query.setParameter(0, nome);
@@ -106,7 +111,7 @@ public class UsuarioDao {
         Session s = variaveisGlobais.getBd().getConexao();
         List<Usuario> usuarios;
         try {
-            Query query = s.createQuery("FROM Usuario u WHERE u.nome = ? and u.senha = ?");
+            Query query = s.createQuery("FROM Usuario u WHERE u.nome = ? AND u.senha = ? AND u.ativo = true");
             query.setParameter(0, usuario.getNome());
             query.setParameter(1, usuario.getSenha());
             usuarios = query.list();
