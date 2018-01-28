@@ -19,16 +19,18 @@ public class Sessao {
 
     private static final List<Sessao> SESSOES;
     private static final Integer TEMPO_SESSAO;
+    private static final Integer TEMPO_MAXIMO_SESSAO;
 
     static {
         SESSOES = new ArrayList<>();
-        TEMPO_SESSAO = 300;
+        TEMPO_SESSAO = 600;
+        TEMPO_MAXIMO_SESSAO = 3600;
     }
 
     public Sessao() {
-        limparSessoes();
+        //limparSessoes();
         getSessao();
-        checarLogin();
+        //checarLogin();
     }
 
     private RNVenda rnVenda;
@@ -76,7 +78,7 @@ public class Sessao {
     private void setIdSessao() {
         FacesContext context = FacesContext.getCurrentInstance();
         Cookie cookie = new Cookie("idSessao", id);
-        cookie.setMaxAge(TEMPO_SESSAO);
+        cookie.setMaxAge(TEMPO_MAXIMO_SESSAO);
         tempoPersistencia = Calendar.getInstance().getTimeInMillis();
         ((HttpServletResponse) context.getExternalContext().getResponse()).addCookie(cookie);
     }
@@ -96,7 +98,7 @@ public class Sessao {
     }
 
     private void getSessao() {
-        String idSessao = getIdSessao();
+        String idSessao = "1";
 
         if (idSessao != null && !idSessao.isEmpty()) {
             for (Sessao s : SESSOES) {
@@ -111,11 +113,11 @@ public class Sessao {
     }
 
     private void novaSessao() {
-        this.id = UUID.randomUUID().toString();
+        this.id = "1";
         variaveisGlobais = new VariaveisGlobais(this);
         rnVenda = new RNVenda(variaveisGlobais);
         SESSOES.add(this);
-        setIdSessao();
+        //setIdSessao();
     }
 
     private void copiar(Sessao s) {
@@ -137,10 +139,7 @@ public class Sessao {
             return false;
         }
         final Sessao other = (Sessao) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.id, other.id);
     }
 
 }
