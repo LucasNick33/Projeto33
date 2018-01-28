@@ -28,12 +28,12 @@
                                 <!-- nome -->
                                 <div class="col-lg-6 col-md-4 col-sm-4 col-xs-6 form-group">	
                                     <label for="nome">Nome:</label>
-                                    <input placeholder="Digite seu nome" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.nome}" style="width: 100%;"/>
+                                    <input placeholder="Digite o nome" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.nome}" style="width: 100%;"/>
                                 </div>
                                 <!-- senha-->
                                 <div class="col-lg-6 col-md-8 col-sm-8 col-xs-6">
                                     <label for="cpf">Senha:</label>
-                                    <input placeholder="Digite sua senha" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.senha}" style="width: 100%;"/>
+                                    <input placeholder="Digite a senha" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.senha}" style="width: 100%;"/>
                                 </div>    
                             </div>
                             <div class="row">
@@ -45,31 +45,50 @@
                                 <!-- cpf -->
                                 <div class="col-lg-4 col-md-8 col-sm-8 col-xs-6">
                                     <label for="cpf">CPF:</label>
-                                    <input placeholder="Digite seu CPF" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.CPF}" style="width: 100%;"/>
+                                    <input placeholder="Digite o CPF" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.CPF}" style="width: 100%;"/>
                                 </div>
                                 <!-- telefone -->
                                 <div class="col-lg-4 col-md-8 col-sm-8 col-xs-6">
                                     <label for="cpf">Telefone:</label>
-                                    <input placeholder="Digite seu Telefone" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.telefone}" style="width: 100%;"/>
+                                    <input placeholder="Digite o Telefone" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.telefone}" style="width: 100%;"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <!-- email -->
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6 form-group">	
                                     <label for="nome">E-mail:</label>
-                                    <input placeholder="Digite seu E-mail" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.email}" style="width: 100%;"/>
+                                    <input placeholder="Digite o e-mail" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.email}" style="width: 100%;"/>
                                 </div>
                                 <!-- cpf -->
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
                                     <label for="cpf">Endereço:</label>
-                                    <input placeholder="Digite seu Endereço" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.endereco}" style="width: 100%;"/>
+                                    <input placeholder="Digite o Endereço" type="text" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.endereco}" style="width: 100%;"/>
                                 </div>
-                            </div>	
+                                <!-- permissoes -->
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6 form-group">
+                                    <label for="permissoes">Permissões:</label>
+                                    <input type="checkbox" value="#{sessao.variaveisGlobais.usuarioDao.usuario.cadastroCliente}">Cadastro de cliente</input>
+                                    <input type="checkbox" value="#{sessao.variaveisGlobais.usuarioDao.usuario.cadastroEstoque}">Cadastro de estoque</input>
+                                    <input type="checkbox" value="#{sessao.variaveisGlobais.usuarioDao.usuario.cadastroProduto}">Cadastro de produto</input>
+                                    <input type="checkbox" value="#{sessao.variaveisGlobais.usuarioDao.usuario.cadastroUsuario}">Cadastro de usuario</input>
+                                    <input type="checkbox" value="#{sessao.variaveisGlobais.usuarioDao.usuario.configuracoes}">Configurações</input>
+                                    <input type="checkbox" value="#{sessao.variaveisGlobais.usuarioDao.usuario.descontoItem}">Desconto no item de venda</input>
+                                    <input type="checkbox" value="#{sessao.variaveisGlobais.usuarioDao.usuario.editarVenda}">Editar venda</input>
+                                </div>
+                                <!-- ativo -->
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+                                    <label for="ativo">Ativo:</label>
+                                    <input type="checkbox" placeholder="Insira as permissões" jsf:value="#{sessao.variaveisGlobais.usuarioDao.usuario.ativo}" style="width: 100%;"/>
+                                </div>
+                            </div>
                             <div class="col-lg-3">
                                 <div class="row">
-                                    <h:commandButton class="btn btn-primary btn-entrar" value="Salvar" action="#{sessao.variaveisGlobais.usuarioDao.inserir()}">Salvar</h:commandButton>
+                                    <h:commandButton class="btn btn-primary btn-entrar" value="Salvar" action="#{sessao.variaveisGlobais.usuarioDao.inserir()}" />
                                 </div>
-                            </div>    				
+                            </div>
+                            <div class="col-lg-3">
+                                <label>#{sessao.variaveisGlobais.mensagem}</label>
+                            </div>
                         </h:form>
                     </div>
                 </div>
